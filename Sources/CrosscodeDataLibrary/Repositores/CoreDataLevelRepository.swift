@@ -12,7 +12,7 @@ public class CoreDataLevelRepository {
         try CoreDataStack.shared.saveContext()
     }
 
-    public func fetchAll() throws -> [Level] {
+    public func fetchAllLayouts() async throws -> [Level] {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         
         // 2. Execute the fetch request
@@ -20,12 +20,18 @@ public class CoreDataLevelRepository {
         
         // 3. Convert each LevelMO to Level using toLevel()
         return results.map { $0.toLevel() }
-//        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "LevelMO")
-//        let results = try context.fetch(fetchRequest)
-//        return results.map {
-//            Level(...)
-//        }
     }
+    
+//    public func fetchAllLayouts() async throws -> [Level] {
+//        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+//        
+//        // Execute the fetch request in a perform block for thread safety
+//        return try await context.perform {
+//            let results = try context.fetch(fetchRequest)
+//            return results.map { $0.toLevel() }
+//        }
+//    }
+//    
 
 //    public func update(person: PersonModel) throws {
 //        guard let id = person.id else { return }
