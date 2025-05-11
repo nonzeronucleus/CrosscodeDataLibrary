@@ -1,7 +1,7 @@
 import Foundation
 
 
-class LevelWord: CustomStringConvertible {
+public class LevelWord: CustomStringConvertible {
     var position: (row: Int, column: Int)
     var direction: Direction
     var word: String = ""
@@ -20,7 +20,7 @@ class LevelWord: CustomStringConvertible {
         return word.count
     }
     
-    var description: String {
+    public var description: String {
         return "\(position): \(direction): \(word)"
     }
 }
@@ -127,7 +127,7 @@ public struct Level: Identifiable, Equatable, Hashable {
         Set(attemptedLetters.filter { $0 != " " })
     }
     
-    func getDuplicateWords() -> [LevelWord] {
+    public func getDuplicateWords() -> [LevelWord] {
         let words = getWords().sorted { $0.word < $1.word }
         var duplicateWords: [LevelWord] = []
         

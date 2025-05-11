@@ -14,13 +14,13 @@ public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable {
     private(set) var id: UUID
     private(set) var elements: [[Element]]
 
-    var rows: Int {
+    public var rows: Int {
         get {
             return elements.count
         }
     }
     
-    var columns: Int {
+    public var columns: Int {
         get {
             return elements.first?.count ?? 0
         }
@@ -67,7 +67,7 @@ public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable {
         return elements.flatMap { $0 }
     }
     
-    func getRows() -> [[Element]] {
+    public func getRows() -> [[Element]] {
         return elements
     }
     
@@ -89,7 +89,7 @@ public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable {
     }
     
     
-    func locationOfElement(byID id: Element.ID) -> Pos? {
+    public func locationOfElement(byID id: Element.ID) -> Pos? {
         for (rowIndex, row) in elements.enumerated() {
             if let columnIndex = row.firstIndex(where: { $0.id == id }) {
                 return Pos(row: rowIndex, column: columnIndex)
@@ -106,7 +106,7 @@ public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable {
         return false
     }
     
-    mutating func updateElement(byPos location: Pos, with transform: (inout Element) -> Void) {
+    public mutating func updateElement(byPos location: Pos, with transform: (inout Element) -> Void) {
         transform(&elements[location.row][location.column])
     }
 }

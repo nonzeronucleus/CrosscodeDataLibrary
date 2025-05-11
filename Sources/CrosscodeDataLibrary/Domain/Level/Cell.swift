@@ -3,7 +3,7 @@ import Foundation
 public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem  {
     public let id: UUID
     let pos: Pos
-    var letter:Character?
+    public var letter:Character?
     
     init(pos:Pos, letter:Character? = nil) {
         self.id = UUID()
@@ -26,7 +26,7 @@ public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem  {
     }
 
     
-    mutating func toggle() {
+    public mutating func toggle() {
         if letter == nil {
             letter = " "
         }
@@ -43,7 +43,7 @@ public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem  {
         return letter ?? "."
     }
     
-    var isActive: Bool {
+    public var isActive: Bool {
         letter != nil
     }
 
