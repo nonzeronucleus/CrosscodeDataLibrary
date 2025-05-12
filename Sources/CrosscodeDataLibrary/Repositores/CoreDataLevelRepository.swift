@@ -1,17 +1,30 @@
 import Foundation
 import CoreData
 
-public class CoreDataLevelRepository {
-    private let context = CoreDataStack.shared.context
 
-    public init() {}
+public protocol LevelRepository {
+        func create(level: Level) throws
+        
+        func fetchAllLayouts() async throws -> [Level]
+        func deleteLayout(id: UUID) async throws
+}
 
+
+public class CoreDataLevelRepositoryImpl: LevelRepository {
+    private let context: NSManagedObjectContext
+    
+    public init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+    
+//    public init() {}
+    
     public func create(level: Level) throws {
         let entity = NSEntityDescription.insertNewObject(forEntityName: "LevelMO", into: context) as! LevelMO
         entity.populate(from: level)
         try CoreDataStack.shared.saveContext()
     }
-
+    
     public func fetchAllLayouts() async throws -> [Level] {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         
@@ -22,29 +35,45 @@ public class CoreDataLevelRepository {
         return results.map { $0.toLevel() }
     }
     
-//    public func fetchAllLayouts() async throws -> [Level] {
-//        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
-//        
-//        // Execute the fetch request in a perform block for thread safety
-//        return try await context.perform {
-//            let results = try context.fetch(fetchRequest)
-//            return results.map { $0.toLevel() }
-//        }
-//    }
-//    
-
-//    public func update(person: PersonModel) throws {
-//        guard let id = person.id else { return }
-//        let object = try context.existingObject(with: id)
-//        object.setValue(person.name, forKey: "name")
-//        object.setValue(person.age, forKey: "age")
-//        try CoreDataStack.shared.saveContext()
-//    }
-//
-//    public func delete(person: PersonModel) throws {
-//        guard let id = person.id else { return }
-//        let object = try context.existingObject(with: id)
-//        context.delete(object)
-//        try CoreDataStack.shared.saveContext()
-//    }
+    //    public func update(person: PersonModel) throws {
+    //        guard let id = person.id else { return }
+    //        let object = try context.existingObject(with: id)
+    //        object.setValue(person.name, forKey: "name")
+    //        object.setValue(person.age, forKey: "age")
+    //        try CoreDataStack.shared.saveContext()
+    //    }
+    //
+    public func deleteLayout(id: UUID) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            context.perform {
+                do {
+                    let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+                    fetchRequest.fetchLimit = 1
+                    
+                    let results = try self.context.fetch(fetchRequest)
+                    
+                    guard let levelToDelete = results.first else {
+                        continuation.resume(throwing: LevelError.notFound)
+                        return
+                    }
+                    
+                    self.context.delete(levelToDelete)
+                    try CoreDataStack.shared.saveContext()
+                    continuation.resume()
+                } catch {
+                    self.context.rollback()
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Error Handling
+    
+    public enum LevelError: Error {
+        case notFound
+        case invalidData
+        case coreDataError(Error)
+    }
 }

@@ -33,9 +33,24 @@ import CoreData
 //    }
 //}
 
+public protocol CoreDataStackProtocol {
+    var context: NSManagedObjectContext { get }
+    func saveContext() throws
+}
 
-public class CoreDataStack {
+public class CoreDataStack: CoreDataStackProtocol {
     public static let shared = CoreDataStack()
+//    public let context: NSManagedObjectContext
+    
+    private init() {
+        // Your CoreData initialization code
+    }
+    
+//    public func saveContext() throws {
+//        // Your save implementation
+//    }
+////}
+//    public static let shared = CoreDataStack()
     
     public lazy var persistentContainer: NSPersistentContainer = {
         let modelName = "MyModel"
