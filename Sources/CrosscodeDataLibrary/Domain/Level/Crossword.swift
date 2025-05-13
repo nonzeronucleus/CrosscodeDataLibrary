@@ -40,5 +40,19 @@ public extension Crossword {
         }
         return true
     }
+    
+    func layoutString() -> String {
+        var result = ""
+        
+        for row in 0..<rows {
+            for column in 0..<columns {
+                result += String(self[row, column].letter ?? ".")
+            }
+            result += "|"
+        }
+        
+        return result
+    }
+    
 }
 

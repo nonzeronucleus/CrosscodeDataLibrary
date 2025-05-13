@@ -1,19 +1,31 @@
 import Foundation
+import Factory
 
-protocol FetchAllLayoutsUseCase {
+public protocol FetchAllLayoutsUseCaseProtocol {
     func execute() async throws -> [Level]
 }
 
 
-struct FetchAllLayoutsUseCaseImpl: FetchAllLayoutsUseCase {
+public final class FetchAllLayoutsUseCase: FetchAllLayoutsUseCaseProtocol {
     private let repository: LevelRepository
     
-    public init(repository: LevelRepository) {
+    // Dependency injected via Factory
+    public init(repository: LevelRepository = Container.shared.levelRepository()) {
         self.repository = repository
     }
     
-    func execute() async throws -> [Level] {
-        return try await repository.fetchAllLayouts()
+    public func execute() async throws -> [Level] {
+        try await repository.fetchAllLayouts()
     }
+}
+
+
+final class MockFetchAllLayoutsUseCase: FetchAllLayoutsUseCaseProtocol {
+    var mockLevels: [Level] = []
+    var errorToThrow: Error?
     
+    func execute() async throws -> [Level] {
+        if let error = errorToThrow { throw error }
+        return mockLevels
+    }
 }

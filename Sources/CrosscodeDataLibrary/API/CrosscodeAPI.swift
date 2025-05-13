@@ -1,33 +1,38 @@
-import Swinject
-
-//public let crosscodeAPI = DIContainer.shared.resolve(CrosscodeAPI.self)
+import Factory
 
 public struct CrosscodeAPI {
+    public static var shared: Self {
+        Container.shared.setupTestMocks()
+        return .init()
+    }
+    
+    // Injected dependencies
     private let repository: LevelRepository
-    private let di: DIAssembly
     
-    // Internal init for testing
-    internal init(repository: LevelRepository, di: DIAssembly = .shared) {
+    public init(
+        repository: LevelRepository = Container.shared.levelRepository()
+    ) {
         self.repository = repository
-        self.di = di
     }
-    
-    public static func make() -> CrosscodeAPI {
-        let di = DIAssembly.shared
-        let repository = di.resolve(LevelRepository.self)
-        return CrosscodeAPI(repository: repository, di: di)
-    }
-    
-    public func createLayout(level: Level) throws {
-        try repository.create(level: level)
+
+    public func addNewLayout() async throws -> [Level] {
+        let addLayoutUseCase: AddLayoutUseCaseProtocol = Container.shared.addLayoutUsecase()
+        return try await addLayoutUseCase.execute()
     }
     
     public func fetchAllLayouts() async throws -> [Level] {
-         let useCase = di.resolve(FetchAllLayoutsUseCase.self)
-         return try await useCase.execute()
+        let fetchAllUseCase: FetchAllLayoutsUseCaseProtocol = Container.shared.fetchAllLayoutsUseCase()
+        return try await fetchAllUseCase.execute()
     }
     
-    public func deleteLayout(id: UUID) async throws {
-        try await repository.deleteLayout(id: id)
+    public func deleteLayout(id: UUID) async throws -> [Level] {
+        let deleteLayoutUseCase: DeleteLayoutUseCase = Container.shared.deleteLayoutUseCase()
+        return try await deleteLayoutUseCase.execute(id: id)
     }
+
 }
+
+
+
+
+

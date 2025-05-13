@@ -1,22 +1,25 @@
 import Foundation
 import CoreData
+import Factory
 
 
 public protocol LevelRepository {
-        func create(level: Level) throws
-        
-        func fetchAllLayouts() async throws -> [Level]
-        func deleteLayout(id: UUID) async throws
+    func create(level: Level) throws
+    
+    func fetchAllLayouts() async throws -> [Level]
+    func getHighestLevelNumber() async throws -> Int
+    
+    func deleteLayout(id: UUID) async throws
 }
 
 
-public class CoreDataLevelRepositoryImpl: LevelRepository {
+public class CoreDataLevelRepository: LevelRepository {
     private let context: NSManagedObjectContext
     
-    public init(context: NSManagedObjectContext) {
+    // Injected via Factory
+    public init(context: NSManagedObjectContext = Container.shared.managedObjectContext()) {
         self.context = context
     }
-    
 //    public init() {}
     
     public func create(level: Level) throws {
@@ -33,6 +36,18 @@ public class CoreDataLevelRepositoryImpl: LevelRepository {
         
         // 3. Convert each LevelMO to Level using toLevel()
         return results.map { $0.toLevel() }
+    }
+    
+    public func getHighestLevelNumber() async throws -> Int {
+        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "number", ascending: false)]
+        fetchRequest.fetchLimit = 1
+        
+        let results = try context.fetch(fetchRequest)
+        guard let firstResult = results.first else {
+            return 0
+        }
+        return Int(firstResult.number)
     }
     
     //    public func update(person: PersonModel) throws {

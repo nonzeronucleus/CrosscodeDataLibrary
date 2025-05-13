@@ -14,13 +14,14 @@ let package = Package(
             targets: ["CrosscodeDataLibrary"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.8.0")
+//        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.8.0")
+        .package(url: "https://github.com/hmlongco/Factory", from: "2.4.2")
     ],
     targets: [
         .target(
             name: "CrosscodeDataLibrary",
             dependencies: [
-                .product(name: "Swinject", package: "Swinject")
+                .product(name: "Factory", package: "Factory")
             ],
             resources: [
                 .process("MyModel.xcdatamodeld")
