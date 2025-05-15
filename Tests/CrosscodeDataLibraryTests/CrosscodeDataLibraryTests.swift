@@ -2,5 +2,7 @@ import Testing
 @testable import CrosscodeDataLibrary
 
 @Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    let wordContainer = WordListContainer()
+    
+    #expect(wordContainer.words.count > 0)
 }

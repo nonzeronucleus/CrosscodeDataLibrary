@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 //
 public class CoreDataStack {
-    public static let shared = CoreDataStack()
+    nonisolated(unsafe) public static let shared = CoreDataStack()
 
     public let persistentContainer: NSPersistentContainer
 

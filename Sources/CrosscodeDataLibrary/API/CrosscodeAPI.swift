@@ -29,6 +29,11 @@ public struct CrosscodeAPI {
         let deleteLayoutUseCase: DeleteLayoutUseCase = Container.shared.deleteLayoutUseCase()
         return try await deleteLayoutUseCase.execute(id: id)
     }
+    
+    public func populateCrossword(crossword:Crossword) async throws ->  (Crossword, CharacterIntMap) {
+        let populateCrosswordUseCase: CrosswordPopulatorUseCaseProtocol = Container.shared.populateCrosswordUseCase()
+        return try await populateCrosswordUseCase.execute(initCrossword:crossword)
+    }
 
 }
 

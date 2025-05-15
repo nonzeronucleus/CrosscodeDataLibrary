@@ -1,5 +1,5 @@
+// swift-tools-version:6.1
 
-// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
@@ -14,7 +14,6 @@ let package = Package(
             targets: ["CrosscodeDataLibrary"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.8.0")
         .package(url: "https://github.com/hmlongco/Factory", from: "2.4.2")
     ],
     targets: [
@@ -24,7 +23,8 @@ let package = Package(
                 .product(name: "Factory", package: "Factory")
             ],
             resources: [
-                .process("MyModel.xcdatamodeld")
+                .process("MyModel.xcdatamodeld"),  // CoreData model
+                .process("Resources")  // Other resource files
             ],
             swiftSettings: [
                 .define("DEBUG", .when(configuration: .debug))
@@ -32,38 +32,7 @@ let package = Package(
         ),
         .testTarget(
             name: "CrosscodeDataLibraryTests",
-            dependencies: ["CrosscodeDataLibrary"]),
+            dependencies: ["CrosscodeDataLibrary"]
+        )
     ]
 )
-
-
-
-// swift-tools-version:5.5
-//import PackageDescription
-//
-//let package = Package(
-//    name: "CrosscodeDataLibrary",
-//    platforms: [
-//        .macOS(.v10_15),
-//        .iOS(.v13),
-//        .tvOS(.v13),
-//        .watchOS(.v6)
-//    ],
-//    products: [
-//        .library(
-//            name: "CrosscodeDataLibrary",
-//            targets: ["CrosscodeDataLibrary"]),
-//    ],
-//    dependencies: [],
-//    targets: [
-//        .target(
-//            name: "CrosscodeDataLibrary",
-//            dependencies: []),
-//        .testTarget(
-//            name: "CrosscodeDataLibraryTests",
-//            dependencies: ["CrosscodeDataLibrary"]),
-//    ]
-//)
-//
-
-
