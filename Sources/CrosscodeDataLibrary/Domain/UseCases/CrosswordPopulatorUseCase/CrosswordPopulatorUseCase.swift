@@ -4,18 +4,6 @@ enum PopulatorError: Error {
     case cantPopulate
 }
 
-class CrosswordPopulatorUseCase:CrosswordPopulatorUseCaseProtocol {
-    func execute(initCrossword: Crossword) async throws -> (Crossword, CharacterIntMap) {
-        let crosswordPopulator = CrosswordPopulator(crossword: initCrossword)
-        return  try crosswordPopulator.populateCrossword()
-    }
-    
-//    func execute(initCrossword: Crossword) async throws -> (Crossword, CharacterIntMap) {
-//        let crosswordPopulator = CrosswordPopulator(crossword: initCrossword)
-//        return  try crosswordPopulator.populateCrossword()
-//    }
-}
-
 class CrosswordPopulator {
     let wordlist = WordListContainer()
     private(set) var entries: [Entry] = []
@@ -51,23 +39,37 @@ class CrosswordPopulator {
         }
     }
 
-    func populateCrossword() throws -> (crossword:Crossword, characterIntMap:CharacterIntMap) {
-        let entryTree = EntryTree.init(rootEntry: entries.randomElement()!)
+    
+    func populateCrossword(currentTask: PopulationTask?) async throws -> (crossword: Crossword, characterIntMap: CharacterIntMap) {
+        let entryTree = EntryTree(rootEntry: entries.randomElement()!)
         var populated = false
-
-        while !populated {
-            if populateNode(node: entryTree.root) {
+        
+        guard let currentTask else {
+            fatalError("currentTask should not be nil")
+        }
+        
+        while !populated && !currentTask.isCancelled {
+            if try await populateNode(node: entryTree.root) {
                 if areAllWordsUnique() {
                     populated = true
                 }
-            }
-            else {
+            } else {
                 entryTree.resetCount()
                 reset()
             }
+            
+            // Add small suspension point to allow cancellation checks
+            try Task.checkCancellation()
+            await Task.yield() // Allows other tasks to run
         }
         
-        return (crossword:crossword, characterIntMap:CharacterIntMap(shuffle: true))
+        if Task.isCancelled {
+            print("Cancelled in populateCrossword")
+            throw CancellationError()
+        }
+        
+        
+        return (crossword: crossword, characterIntMap: CharacterIntMap(shuffle: true))
     }
     
     private func areAllWordsUnique() -> Bool {
@@ -83,48 +85,54 @@ class CrosswordPopulator {
         return true
     }
 
-    private func populateNode(node:EntryNode) -> Bool{
+    
+    private func populateNode(node: EntryNode) async throws -> Bool {
         var attempts = 0
         var childrenPopulated = false
         let mask = getWord(entry: node.entry)
         
-        while !childrenPopulated {
+        while !childrenPopulated && !Task.isCancelled {
             node.increaseCount()
             
-            if (node.getCount() > 100) {
+            if node.getCount() > 100 {
                 return false
             }
             
             childrenPopulated = true
             upateLettersWithFoundWords()
             
-            var wordsByLength = wordlist.getWordsByLength(length: mask.count)
+            // Check cancellation
+            try Task.checkCancellation()
             
+            var wordsByLength = wordlist.getWordsByLength(length: mask.count)
             var matchingWords = wordsByLength.filterByMask(mask: mask)
             
-            if matchingWords.count == 0 {
+            if matchingWords.isEmpty {
                 wordlist.reset(forLength: mask.count)
                 wordsByLength = wordlist.getWordsByLength(length: mask.count)
-                
                 matchingWords = wordsByLength.filterByMask(mask: mask)
             }
             
             var finalWordList: [String] = []
             var tempLetters = letters
             
-            while finalWordList.count == 0 && tempLetters.count > 0 {
+            while finalWordList.isEmpty && !tempLetters.isEmpty && !Task.isCancelled {
                 let letter = tempLetters.removeFirst()
                 finalWordList = matchingWords.filterContaining(letter: letter)
             }
             
-            if finalWordList.count == 0 {
+            if finalWordList.isEmpty {
                 finalWordList = matchingWords
             }
             
             if let word = finalWordList.randomElement() {
                 setWord(entry: node.entry, word: word)
+                
+                // Properly await child nodes sequentially
                 for child in node.children {
-                    childrenPopulated = childrenPopulated && populateNode(node: child)
+                    let childPopulated = try await populateNode(node: child)
+                    childrenPopulated = childrenPopulated && childPopulated
+                    if !childrenPopulated { break }
                 }
                 
                 if !childrenPopulated {
@@ -134,12 +142,14 @@ class CrosswordPopulator {
                     }
                     attempts += 1
                 }
-            }
-            else {
+            } else {
                 return false
             }
+            
+            await Task.yield()
         }
-        return true
+        
+        return childrenPopulated
     }
     
     private func getWord(entry:Entry) -> String {
@@ -163,6 +173,7 @@ class CrosswordPopulator {
     }
 
     func setWord(entry:Entry, word:String) {
+
         if entry.length == 0 {
             return
         }
@@ -199,3 +210,24 @@ class CrosswordPopulator {
 
 
 
+
+class CrosswordPopulatorUseCase: CrosswordPopulatorUseCaseProtocol {
+    private var currentTask: PopulationTask?
+    
+    func execute(task: PopulationTask?, crosswordLayout: String) async throws -> (String, String) {
+        // Cancel previous task if exists
+        currentTask?.cancel()
+        
+        // Create new task
+        currentTask = task
+        let initCrossword = Crossword(initString: crosswordLayout)
+        let crosswordPopulator = CrosswordPopulator(crossword: initCrossword)
+        let (finalCrossword, charIntMap) = try await crosswordPopulator.populateCrossword(currentTask: task)
+        return (finalCrossword.layoutString(), charIntMap.description)
+        //        return try await currentTask!.value
+    }
+    
+    func cancel() {
+        currentTask?.cancel()
+    }
+}

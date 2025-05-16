@@ -1,6 +1,8 @@
 import Factory
 
-public struct CrosscodeAPI {
+typealias PopulationTask = Task<(String, String), Error>
+
+public class CrosscodeAPI {
     public static var shared: Self {
         Container.shared.setupTestMocks()
         return .init()
@@ -8,8 +10,8 @@ public struct CrosscodeAPI {
     
     // Injected dependencies
     private let repository: LevelRepository
-    
-    public init(
+
+    required public init(
         repository: LevelRepository = Container.shared.levelRepository()
     ) {
         self.repository = repository
@@ -30,14 +32,44 @@ public struct CrosscodeAPI {
         return try await deleteLayoutUseCase.execute(id: id)
     }
     
-    public func populateCrossword(crossword:Crossword) async throws ->  (Crossword, CharacterIntMap) {
-        let populateCrosswordUseCase: CrosswordPopulatorUseCaseProtocol = Container.shared.populateCrosswordUseCase()
-        return try await populateCrosswordUseCase.execute(initCrossword:crossword)
+    private let actor = CrosscodeAPIActor()
+    
+    public func populateCrossword(crosswordLayout: String) async throws -> (String, String) {
+        try await actor.populate(crosswordLayout: crosswordLayout)
     }
-
+    
+    public func cancel() async {
+        await actor.cancel()
+    }
+    
 }
 
-
-
-
-
+private actor CrosscodeAPIActor {
+    // Change the task type to match what your task actually returns
+    private var currentTask: PopulationTask?
+    
+    func populate(crosswordLayout: String) async throws -> (String, String) {
+        // Cancel previous task if exists
+        currentTask?.cancel()
+        
+        // Create and store new task with correct type
+        let task = Task<(String, String), Error> {
+            try await executePopulation(crosswordLayout: crosswordLayout)
+        }
+        currentTask = task
+        
+        return try await task.value
+    }
+    
+    private func executePopulation(crosswordLayout: String) async throws -> (String, String) {
+        let useCase = Container.shared.populateCrosswordUseCase()
+        let ret = try await useCase.execute(task: currentTask, crosswordLayout: crosswordLayout)
+        return ret
+    }
+    
+    // Explicit cancellation method
+    func cancel() {
+        currentTask?.cancel()
+        currentTask = nil
+    }
+}
