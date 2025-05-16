@@ -25,7 +25,6 @@ public class LevelWord: CustomStringConvertible {
     }
 }
 
-//@ObservableState
 public struct Level: Identifiable, Equatable, Hashable {
     public var id: UUID
     
