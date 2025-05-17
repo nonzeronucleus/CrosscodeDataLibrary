@@ -28,6 +28,22 @@ public extension Container {
         }
     }
     
+//    var saveLevelUseCase: Factory<SaveLevelUseCase> {
+//        Factory(self) {
+//            SaveLevelUseCaseImpl(
+//                repository: self.levelRepository()
+//            )
+//        }
+//    }
+    var saveLevelUseCase: Factory<SaveLevelUseCase> {
+        Factory(self) { @MainActor in
+            SaveLevelUseCaseImpl(
+                repository: self.levelRepository(),
+                debounceTime: 500_000_000 // 0.5s debounce
+            )
+        }
+    }
+    
     internal var populateCrosswordUseCase: Factory<CrosswordPopulatorUseCaseProtocol> {
         Factory(self) {
             CrosswordPopulatorUseCase()

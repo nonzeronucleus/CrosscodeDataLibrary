@@ -1,4 +1,4 @@
-public struct Pos:Equatable, Hashable, Codable {
+public struct Pos:Equatable, Hashable, Codable, Sendable {
     public let row:Int
     public let column:Int
     

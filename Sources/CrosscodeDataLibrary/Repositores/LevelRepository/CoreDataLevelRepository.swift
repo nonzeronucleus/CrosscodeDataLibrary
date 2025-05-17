@@ -5,28 +5,68 @@ import Factory
 
 public protocol LevelRepository {
     func create(level: Level) throws
+    func saveLevel(level:Level) throws
     
     func fetchAllLayouts() async throws -> [Level]
+    func fetchLayout(id: UUID) async throws -> Level
+
     func getHighestLevelNumber() async throws -> Int
     
     func deleteLayout(id: UUID) async throws
-}
+    }
 
 
 public class CoreDataLevelRepository: LevelRepository {
+    
     private let context: NSManagedObjectContext
     
     // Injected via Factory
     public init(context: NSManagedObjectContext = Container.shared.managedObjectContext()) {
         self.context = context
     }
-//    public init() {}
-    
+
     public func create(level: Level) throws {
         let entity = NSEntityDescription.insertNewObject(forEntityName: "LevelMO", into: context) as! LevelMO
         entity.populate(from: level)
         try CoreDataStack.shared.saveContext()
     }
+    
+    public func fetchLayout(id: UUID) async throws -> Level {
+        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        fetchRequest.fetchLimit = 1
+
+        do {
+            let results = try context.fetch(fetchRequest)
+            return results.first!.toLevel()
+        } catch {
+            context.rollback()
+            throw LevelError.coreDataError(error)
+        }
+    }
+
+    
+    public func saveLevel(level: Level) throws {
+        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", level.id as CVarArg)
+        fetchRequest.fetchLimit = 1
+
+        do {
+            let results = try context.fetch(fetchRequest)
+            
+            guard let existingLevel = results.first else {
+                throw LevelError.notFound
+            }
+            
+            existingLevel.populate(from: level)
+            try CoreDataStack.shared.saveContext()
+            
+        } catch {
+            context.rollback()
+            throw LevelError.coreDataError(error)
+        }
+    }
+
     
     public func fetchAllLayouts() async throws -> [Level] {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
@@ -49,15 +89,7 @@ public class CoreDataLevelRepository: LevelRepository {
         }
         return Int(firstResult.number)
     }
-    
-    //    public func update(person: PersonModel) throws {
-    //        guard let id = person.id else { return }
-    //        let object = try context.existingObject(with: id)
-    //        object.setValue(person.name, forKey: "name")
-    //        object.setValue(person.age, forKey: "age")
-    //        try CoreDataStack.shared.saveContext()
-    //    }
-    //
+
     public func deleteLayout(id: UUID) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             context.perform {
@@ -86,9 +118,11 @@ public class CoreDataLevelRepository: LevelRepository {
     
     // MARK: - Error Handling
     
-    public enum LevelError: Error {
-        case notFound
-        case invalidData
-        case coreDataError(Error)
-    }
+}
+
+
+public enum LevelError: Error {
+    case notFound
+    case invalidData
+    case coreDataError(Error)
 }

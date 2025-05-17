@@ -1,0 +1,56 @@
+import Foundation
+import Factory
+import Combine
+
+@MainActor  // Ensures CoreData operations run on the main thread
+final class SaveLevelUseCaseImpl: SaveLevelUseCase {
+    private let repository: LevelRepository
+    private var saveTask: Task<Void, Error>?
+    private let debounceTime: UInt64 // in nanoseconds (e.g., 500_000_000 = 0.5s)
+
+    init(
+        repository: LevelRepository = Container.shared.levelRepository(),
+        debounceTime: UInt64 = 500_000_000 // Default: 0.5 seconds
+    ) {
+        self.repository = repository
+        self.debounceTime = debounceTime
+    }
+
+    func execute(level: Level) async throws {
+        // Cancel the previous task if it exists
+        saveTask?.cancel()
+
+        // Start a new debounced task
+        saveTask = Task { [weak self] in
+            // Wait for debounce time (non-blocking for other operations)
+            try await Task.sleep(nanoseconds: self?.debounceTime ?? 500_000_000)
+
+            // Check if task was cancelled
+            try Task.checkCancellation()
+
+            // Proceed with save (runs on MainActor)
+            try self?.repository.saveLevel(level: level)
+        }
+
+        // Await the task's result (propagates errors if needed)
+        try await saveTask?.value
+    }
+}
+public protocol SaveLevelUseCase {
+    func execute(level:Level) async throws
+}
+
+
+//class SaveLevelUseCaseImpl: SaveLevelUseCase {
+//    private let repository: LevelRepository
+//
+//    // Dependency injected via Factory
+//    public init(repository: LevelRepository = Container.shared.levelRepository()) {
+//        self.repository = repository
+//    }
+//
+//    func execute(level:Level) async throws  {
+//        try repository.saveLevel(level: level)
+//    }
+//}
+

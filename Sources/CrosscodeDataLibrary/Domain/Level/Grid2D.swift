@@ -1,12 +1,12 @@
 import Foundation
 
 
-public protocol Grid2DItem: Hashable, Codable {
+public protocol Grid2DItem: Hashable, Codable, Sendable {
     func toStorable() -> Character
     mutating func reset()
 }
 
-public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable {
+public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable, Sendable {
     public static func == (lhs: Grid2D<Element>, rhs: Grid2D<Element>) -> Bool {
         lhs.id == rhs.id
     }

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem  {
+public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem, Sendable  {
     public let id: UUID
     let pos: Pos
     public var letter:Character?

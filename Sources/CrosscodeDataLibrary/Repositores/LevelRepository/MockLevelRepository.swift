@@ -28,9 +28,26 @@ class MockLevelRepository:LevelRepository {
         }
     }
     
+    func saveLevel(level: Level) throws {
+        guard let index = levels.firstIndex(where: { $0.id == level.id }) else {
+            throw LevelError.notFound
+        }
+        levels[index] = level
+//        debugPrint("Saving level \(level.id), \(level.crossword.layoutString())")
+    }
+
+    
     func create(level: Level) throws {
         levels.append(level)
     }
+    
+    func fetchLayout(id: UUID) async throws -> Level {
+        guard let index = levels.firstIndex(where: { $0.id == id }) else {
+            throw LevelError.notFound
+        }
+        return levels[index]
+    }
+
     
     func fetchAllLayouts() async throws -> [Level] {
         return levels
@@ -44,4 +61,3 @@ class MockLevelRepository:LevelRepository {
         
     }
 }
-//.    .. ...| ..  .. ... . .| .. ... ...    |    ..    ... .|. .  ... .... .|. ....   .... .|       .      .|...... . ......|.      .       |. ....   .... .|. .... ...  . .|. ...    ..    |    ... ... .. |. . ... ..  .. |... ..    .    |"},{"number":2,"gridText":"     ..........|   . ..........|     ..........|.. ............|.. ............|.     .........|.....     .....|..... ... .....|.....     .....|.........     .|............ ..|............ ..|..........     |.......... .   |..........     |

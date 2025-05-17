@@ -25,7 +25,7 @@ public class LevelWord: CustomStringConvertible {
     }
 }
 
-public struct Level: Identifiable, Equatable, Hashable {
+public struct Level: Identifiable, Equatable, Hashable, Sendable {
     public var id: UUID
     
     public var number: Int?

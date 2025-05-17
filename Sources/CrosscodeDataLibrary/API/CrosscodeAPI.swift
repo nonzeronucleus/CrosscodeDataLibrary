@@ -4,7 +4,7 @@ typealias PopulationTask = Task<(String, String), Error>
 
 public class CrosscodeAPI {
     public static var shared: Self {
-        Container.shared.setupTestMocks()
+//        Container.shared.setupTestMocks()
         return .init()
     }
     
@@ -30,6 +30,11 @@ public class CrosscodeAPI {
     public func deleteLayout(id: UUID) async throws -> [Level] {
         let deleteLayoutUseCase: DeleteLayoutUseCase = Container.shared.deleteLayoutUseCase()
         return try await deleteLayoutUseCase.execute(id: id)
+    }
+    
+    public func saveLevel(level: Level) async throws {
+        let saveLevelUseCase: SaveLevelUseCase = Container.shared.saveLevelUseCase()
+        try await saveLevelUseCase.execute(level: level)
     }
     
     private let actor = CrosscodeAPIActor()
