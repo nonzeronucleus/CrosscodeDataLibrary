@@ -54,5 +54,16 @@ public extension Crossword {
         return result
     }
     
+    mutating func depopulate() {
+        updateAll { cell in
+            if cell.letter != nil {
+                var newCell = cell
+                newCell.letter = " "
+                return newCell
+            } else {
+                return cell
+            }
+        }
+    }
 }
 

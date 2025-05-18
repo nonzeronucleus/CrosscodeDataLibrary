@@ -4,12 +4,16 @@ typealias PopulationTask = Task<(String, String), Error>
 
 public class CrosscodeAPI {
     public static var shared: Self {
-//        Container.shared.setupTestMocks()
+        Container.shared.setupTestMocks()
         return .init()
     }
     
     // Injected dependencies
     private let repository: LevelRepository
+
+    // Actor for async operations
+    private let actor = CrosscodeAPIActor()
+
 
     required public init(
         repository: LevelRepository = Container.shared.levelRepository()
@@ -37,11 +41,16 @@ public class CrosscodeAPI {
         try await saveLevelUseCase.execute(level: level)
     }
     
-    private let actor = CrosscodeAPIActor()
-    
     public func populateCrossword(crosswordLayout: String) async throws -> (String, String) {
         try await actor.populate(crosswordLayout: crosswordLayout)
     }
+    
+    public func depopulateCrossword(crosswordLayout: String) async throws -> (String, String) {
+        let depopulateCrosswordUseCase: DepopulateCrosswordUseCase = Container.shared.depopulateCrosswordUseCase()
+        
+        return depopulateCrosswordUseCase.execute(crosswordLayout: crosswordLayout)
+    }
+    
     
     public func cancel() async {
         await actor.cancel()

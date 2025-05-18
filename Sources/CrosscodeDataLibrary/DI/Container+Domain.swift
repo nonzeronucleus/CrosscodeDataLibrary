@@ -28,13 +28,6 @@ public extension Container {
         }
     }
     
-//    var saveLevelUseCase: Factory<SaveLevelUseCase> {
-//        Factory(self) {
-//            SaveLevelUseCaseImpl(
-//                repository: self.levelRepository()
-//            )
-//        }
-//    }
     var saveLevelUseCase: Factory<SaveLevelUseCase> {
         Factory(self) { @MainActor in
             SaveLevelUseCaseImpl(
@@ -49,4 +42,11 @@ public extension Container {
             CrosswordPopulatorUseCase()
         }
     }
+    
+    internal var depopulateCrosswordUseCase: Factory<DepopulateCrosswordUseCase> {
+        Factory(self) {
+            DepopulateCrosswordUseCaseImpl()
+        }
+    }
+
 }
