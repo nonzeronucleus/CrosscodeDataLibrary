@@ -51,7 +51,7 @@ extension LevelMO {
         self.gridText = level.gridText
         self.letterMap = level.letterMapStr
         self.attemptedLetters = level.attemptedLettersStr
-        self.numCorrectLetters = Int16(level.numCorrectLetters)
+//        self.numCorrectLetters = Int16(level.numCorrectLetters)
     }
     
     func toLevel() -> Level {
@@ -64,7 +64,7 @@ extension LevelMO {
                      packId: self.packId,
                      gridText: self.gridText,
                      letterMap: self.letterMap,
-                     attemptedLetters: self.attemptedLetters,
-                     numCorrectLetters: Int(self.numCorrectLetters))
+                     attemptedLetters: self.attemptedLetters)
+//                     numCorrectLetters: Int(self.numCorrectLetters))
     }
 }

@@ -2,6 +2,7 @@ import Factory
 import Foundation
 
 extension Container {
+    
     var uuid: Factory<UUIDGenerator> {
         self { RandomUUIDProvider() }
             .singleton

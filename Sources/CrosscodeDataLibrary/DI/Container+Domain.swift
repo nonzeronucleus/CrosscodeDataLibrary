@@ -3,7 +3,7 @@ import CoreData
 
 // Main container setup
 public extension Container {
-    // MARK: - Use Cases
+    // MARK: - Layouts
     var fetchAllLayoutsUseCase: Factory<FetchAllLayoutsUseCaseProtocol> {
         Factory(self) {
             FetchAllLayoutsUseCase(
@@ -37,6 +37,8 @@ public extension Container {
         }
     }
     
+    // Mark: - Population
+    
     internal var populateCrosswordUseCase: Factory<CrosswordPopulatorUseCaseProtocol> {
         Factory(self) {
             CrosswordPopulatorUseCase()
@@ -48,5 +50,14 @@ public extension Container {
             DepopulateCrosswordUseCaseImpl()
         }
     }
+    
+    // Mark: - PlayableLevels
+    
+    internal var addPlayableLevelUseCase: Factory<AddPlayableLevelUseCase> {
+        Factory(self) {
+            AddPlayableLevelUseCaseImpl()
+        }
+    }
+    
 
 }
