@@ -20,22 +20,22 @@ public class LayoutsAPI {
         self.repository = repository
     }
 
-    public func addNewLayout() async throws -> [Level] {
+    public func addNewLayout() async throws -> [Layout] {
         let addLayoutUseCase: AddLayoutUseCaseProtocol = Container.shared.addLayoutUsecase()
         return try await addLayoutUseCase.execute()
     }
     
-    public func fetchAllLayouts() async throws -> [Level] {
+    public func fetchAllLayouts() async throws -> [Layout] {
         let fetchAllUseCase: FetchAllLayoutsUseCaseProtocol = Container.shared.fetchAllLayoutsUseCase()
         return try await fetchAllUseCase.execute()
     }
     
-    public func deleteLayout(id: UUID) async throws -> [Level] {
+    public func deleteLayout(id: UUID) async throws -> [Layout] {
         let deleteLayoutUseCase: DeleteLayoutUseCase = Container.shared.deleteLayoutUseCase()
         return try await deleteLayoutUseCase.execute(id: id)
     }
     
-    public func saveLevel(level: Level) async throws {
+    public func saveLevel(level: Layout) async throws {
         let saveLevelUseCase: SaveLevelUseCase = Container.shared.saveLevelUseCase()
         try await saveLevelUseCase.execute(level: level)
     }

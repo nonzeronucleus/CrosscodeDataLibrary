@@ -16,7 +16,7 @@ final class SaveLevelUseCaseImpl: SaveLevelUseCase {
         self.debounceTime = debounceTime
     }
 
-    func execute(level: Level) async throws {
+    func execute(level: Layout) async throws {
         // Cancel the previous task if it exists
         saveTask?.cancel()
 
@@ -37,7 +37,7 @@ final class SaveLevelUseCaseImpl: SaveLevelUseCase {
     }
 }
 public protocol SaveLevelUseCase {
-    func execute(level:Level) async throws
+    func execute(level:Layout) async throws
 }
 
 

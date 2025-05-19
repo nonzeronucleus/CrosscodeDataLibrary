@@ -2,7 +2,7 @@ import Foundation
 import Factory
 
 public protocol FetchAllLayoutsUseCaseProtocol {
-    func execute() async throws -> [Level]
+    func execute() async throws -> [Layout]
 }
 
 
@@ -14,17 +14,17 @@ public final class FetchAllLayoutsUseCase: FetchAllLayoutsUseCaseProtocol {
         self.repository = repository
     }
     
-    public func execute() async throws -> [Level] {
+    public func execute() async throws -> [Layout] {
         try await repository.fetchAllLayouts()
     }
 }
 
 
 final class MockFetchAllLayoutsUseCase: FetchAllLayoutsUseCaseProtocol {
-    var mockLevels: [Level] = []
+    var mockLevels: [Layout] = []
     var errorToThrow: Error?
     
-    func execute() async throws -> [Level] {
+    func execute() async throws -> [Layout] {
         if let error = errorToThrow { throw error }
         return mockLevels
     }

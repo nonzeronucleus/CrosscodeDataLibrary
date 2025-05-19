@@ -2,7 +2,7 @@ import Foundation
 import Factory
 
 public protocol AddLayoutUseCaseProtocol {
-    func execute() async throws -> [Level]
+    func execute() async throws -> [Layout]
 }
 
 
@@ -14,7 +14,7 @@ class AddLayoutUseCase: AddLayoutUseCaseProtocol {
         self.repository = repository
     }
 
-    func execute() async throws -> [Level] {
+    func execute() async throws -> [Layout] {
         @Injected(\.uuid) var uuid
         let currentHighestNum = try await repository.getHighestLevelNumber()
         
@@ -22,12 +22,10 @@ class AddLayoutUseCase: AddLayoutUseCaseProtocol {
         let crossword = Crossword(rows: 15, columns: 15)
         
 
-        let layout = Level(
+        let layout = Layout(
             id: id,
             number: currentHighestNum+1,
-            packId: nil,
-            gridText: crossword.layoutString(),
-            attemptedLetters: ""
+            gridText: crossword.layoutString()
         )
         
         try repository.create(level: layout)

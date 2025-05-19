@@ -4,11 +4,11 @@ import Factory
 
 
 public protocol LevelRepository {
-    func create(level: Level) throws
-    func saveLevel(level:Level) throws
+    func create(level: Layout) throws
+    func saveLevel(level:Layout) throws
     
-    func fetchAllLayouts() async throws -> [Level]
-    func fetchLayout(id: UUID) async throws -> Level
+    func fetchAllLayouts() async throws -> [Layout]
+    func fetchLayout(id: UUID) async throws -> Layout
 
     func getHighestLevelNumber() async throws -> Int
     
@@ -25,13 +25,13 @@ public class CoreDataLevelRepository: LevelRepository {
         self.context = context
     }
 
-    public func create(level: Level) throws {
+    public func create(level: Layout) throws {
         let entity = NSEntityDescription.insertNewObject(forEntityName: "LevelMO", into: context) as! LevelMO
         entity.populate(from: level)
         try CoreDataStack.shared.saveContext()
     }
     
-    public func fetchLayout(id: UUID) async throws -> Level {
+    public func fetchLayout(id: UUID) async throws -> Layout {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         fetchRequest.fetchLimit = 1
@@ -46,7 +46,7 @@ public class CoreDataLevelRepository: LevelRepository {
     }
 
     
-    public func saveLevel(level: Level) throws {
+    public func saveLevel(level: Layout) throws {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", level.id as CVarArg)
         fetchRequest.fetchLimit = 1
@@ -68,7 +68,7 @@ public class CoreDataLevelRepository: LevelRepository {
     }
 
     
-    public func fetchAllLayouts() async throws -> [Level] {
+    public func fetchAllLayouts() async throws -> [Layout] {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         
         // 2. Execute the fetch request

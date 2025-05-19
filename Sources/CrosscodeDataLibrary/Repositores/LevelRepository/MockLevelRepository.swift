@@ -1,7 +1,7 @@
 import Factory
 
 class MockLevelRepository:LevelRepository {
-    var levels: [Level] = []
+    var levels: [Layout] = []
     
     private init() {
     }
@@ -12,12 +12,12 @@ class MockLevelRepository:LevelRepository {
             
             @Injected(\.uuid) var uuid
             //        let crossword = Crossword(rows: 15, columns: 15)
-            let layout = try Level(
+            let layout = try Layout(
                 id: uuid.uuidGenerator(),
                 number: instance.getHighestLevelNumber() + 1,
-                packId: nil,
+//                packId: nil,
                 gridText: "    .    .. ...| ..  .. ... . .| .. ... ...    |    ..    ... .|. .  ... .... .|. ....   .... .|       .      .|...... . ......|.      .       |. ....   .... .|. .... ...  . .|. ...    ..    |    ... ... .. |. . ... ..  .. |... ..    .    |",
-                attemptedLetters: ""
+//                attemptedLetters: ""
             )
             
             try instance.create(level: layout) // this is safe because `instance` is fully initialized
@@ -28,7 +28,7 @@ class MockLevelRepository:LevelRepository {
         }
     }
     
-    func saveLevel(level: Level) throws {
+    func saveLevel(level: Layout) throws {
         guard let index = levels.firstIndex(where: { $0.id == level.id }) else {
             throw LevelError.notFound
         }
@@ -37,11 +37,11 @@ class MockLevelRepository:LevelRepository {
     }
 
     
-    func create(level: Level) throws {
+    func create(level: Layout) throws {
         levels.append(level)
     }
     
-    func fetchLayout(id: UUID) async throws -> Level {
+    func fetchLayout(id: UUID) async throws -> Layout {
         guard let index = levels.firstIndex(where: { $0.id == id }) else {
             throw LevelError.notFound
         }
@@ -49,7 +49,7 @@ class MockLevelRepository:LevelRepository {
     }
 
     
-    func fetchAllLayouts() async throws -> [Level] {
+    func fetchAllLayouts() async throws -> [Layout] {
         return levels
     }
     

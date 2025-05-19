@@ -44,27 +44,27 @@ import CoreData
 
 //
 extension LevelMO {
-    func populate(from level: Level) {
+    func populate(from level: Layout) {
         self.id = level.id
         self.number = Int64(level.number ?? 0)
-        self.packId = level.packId
+//        self.packId = level.packId
         self.gridText = level.gridText
         self.letterMap = level.letterMapStr
-        self.attemptedLetters = level.attemptedLettersStr
+//        self.attemptedLetters = level.attemptedLettersStr
 //        self.numCorrectLetters = Int16(level.numCorrectLetters)
     }
     
-    func toLevel() -> Level {
+    func toLevel() -> Layout {
         guard let id = self.id else {
             fatalError("Missing id for LevelMO number \(self.number)")
         }
         
-        return Level(id: id,
+        return Layout(id: id,
                      number: Int(self.number),
-                     packId: self.packId,
+//                     packId: self.packId,
                      gridText: self.gridText,
-                     letterMap: self.letterMap,
-                     attemptedLetters: self.attemptedLetters)
+                     letterMap: self.letterMap) //,
+//                     attemptedLetters: self.attemptedLetters)
 //                     numCorrectLetters: Int(self.numCorrectLetters))
     }
 }

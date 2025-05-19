@@ -12,6 +12,20 @@ public struct Layout: Identifiable, Equatable, Hashable, Sendable, Codable {
         self.crossword = crossword
         self.letterMap = letterMap
     }
+    
+    public init(id: UUID, number: Int?, gridText: String?, letterMap: String? = nil) {
+        self.id = id
+        self.number = number
+        if let gridText {
+            crossword = Crossword(initString: gridText)
+        } else {
+            crossword = Crossword(rows: 15, columns: 15)
+        }
+        let parsedLetterMap = letterMap.map { CharacterIntMap(from: $0) }
+
+        self.letterMap = parsedLetterMap
+    }
+
 
     public var gridText: String? {
         Layout.transformedValue(crossword)
@@ -36,7 +50,7 @@ public struct Layout: Identifiable, Equatable, Hashable, Sendable, Codable {
     }
 }
 
-public struct Level: Identifiable, Equatable, Hashable, Sendable {
+public struct PlayableLevel: Identifiable, Equatable, Hashable, Sendable {
     public var id: UUID { layout.id }
     public var layout: Layout
     public var attemptedLetters: [Character]
@@ -70,15 +84,7 @@ public struct Level: Identifiable, Equatable, Hashable, Sendable {
         letterMap: String? = nil,
         attemptedLetters: String? = nil
     ) {
-        let crossword: Crossword
-        if let gridText {
-            crossword = Crossword(initString: gridText)
-        } else {
-            crossword = Crossword(rows: 15, columns: 15)
-        }
-        
-        let parsedLetterMap = letterMap.map { CharacterIntMap(from: $0) }
-        self.layout = Layout(id: id, number: number, crossword: crossword, letterMap: parsedLetterMap)
+        self.layout = Layout(id: id, number: number, gridText: gridText, letterMap: letterMap)
         
         self.packId = packId
         self.isLocked = false
@@ -165,7 +171,7 @@ public struct Level: Identifiable, Equatable, Hashable, Sendable {
     }
 }
 
-extension Level: Codable {
+extension PlayableLevel: Codable {
     private enum CodingKeys: String, CodingKey {
         case layout, attemptedLetters, packId, isLocked
     }
