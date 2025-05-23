@@ -1,6 +1,6 @@
 import CoreData
 
-extension LevelMO {
+extension LayoutMO {
     func populate(from level: LevelLayout) {
         self.id = level.id
         self.number = Int64(level.number ?? 0)

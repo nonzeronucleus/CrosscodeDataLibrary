@@ -14,10 +14,11 @@ public class CoreDataStack {
         }
 
         persistentContainer = NSPersistentContainer(name: "MyModel", managedObjectModel: model)
-        persistentContainer.loadPersistentStores { _, error in
+        persistentContainer.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Unresolved error \(error)")
             }
+            print("Core Data DB Location:", description.url?.absoluteString ?? "Unknown location")
         }
     }
 

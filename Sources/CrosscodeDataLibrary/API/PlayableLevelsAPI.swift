@@ -21,7 +21,7 @@ public class PlayableLevelsAPI {
         self.repository = repository
     }
     
-    public func addNewLevel(layout:Layout) async throws -> PlayableLevel {
+    public func addNewLevel(layout:LevelLayout) async throws -> PlayableLevel {
         let addNewLevelUseCase: AddPlayableLevelUseCase = Container.shared.addPlayableLevelUseCase()
         return try addNewLevelUseCase.execute(layout: layout)
 

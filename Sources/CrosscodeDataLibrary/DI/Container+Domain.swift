@@ -7,7 +7,7 @@ public extension Container {
     var fetchAllLayoutsUseCase: Factory<FetchAllLayoutsUseCaseProtocol> {
         Factory(self) {
             FetchAllLayoutsUseCase(
-                repository: self.levelRepository()
+                repository: self.layoutRepository()
             )
         }
     }
@@ -15,7 +15,7 @@ public extension Container {
     var addLayoutUsecase: Factory<AddLayoutUseCaseProtocol> {
         Factory(self) {
             AddLayoutUseCase(
-                repository: self.levelRepository()
+                repository: self.layoutRepository()
             )
         }
     }
@@ -23,7 +23,7 @@ public extension Container {
     var deleteLayoutUseCase: Factory<DeleteLayoutUseCase> {
         Factory(self) {
             DeleteLayoutUseCaseImpl(
-                repository: self.levelRepository()
+                repository: self.layoutRepository()
             )
         }
     }
@@ -31,7 +31,9 @@ public extension Container {
     var saveLevelUseCase: Factory<SaveLevelUseCase> {
         Factory(self) { @MainActor in
             SaveLevelUseCaseImpl(
-                repository: self.levelRepository(),
+//                repository: self.levelRepository(),
+                repository: self.layoutRepository(),
+
                 debounceTime: 500_000_000 // 0.5s debounce
             )
         }
@@ -59,5 +61,10 @@ public extension Container {
         }
     }
     
+    internal var importLayoutsUseCase: Factory<ImportLayoutsUseCase> {
+        Factory(self) {
+            ImportLayoutsUseCaseImpl(repository: self.layoutRepository(), fileRepository: self.importLayoutRepository())
+        }
+    }
 
 }

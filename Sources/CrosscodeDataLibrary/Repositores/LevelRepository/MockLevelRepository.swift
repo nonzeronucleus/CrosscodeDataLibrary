@@ -1,7 +1,7 @@
 import Factory
 
 class MockLevelRepository:LevelRepository {
-    var levels: [Layout] = []
+    var levels: [LevelLayout] = []
     
     private init() {
     }
@@ -12,7 +12,7 @@ class MockLevelRepository:LevelRepository {
             
             @Injected(\.uuid) var uuid
             //        let crossword = Crossword(rows: 15, columns: 15)
-            let layout = try Layout(
+            let layout = try LevelLayout(
                 id: uuid.uuidGenerator(),
                 number: instance.getHighestLevelNumber() + 1,
 //                packId: nil,
@@ -28,20 +28,19 @@ class MockLevelRepository:LevelRepository {
         }
     }
     
-    func saveLevel(level: Layout) throws {
+    func saveLevel(level: LevelLayout) throws {
         guard let index = levels.firstIndex(where: { $0.id == level.id }) else {
             throw LevelError.notFound
         }
         levels[index] = level
-//        debugPrint("Saving level \(level.id), \(level.crossword.layoutString())")
     }
 
     
-    func create(level: Layout) throws {
+    func create(level: LevelLayout) throws {
         levels.append(level)
     }
     
-    func fetchLayout(id: UUID) async throws -> Layout {
+    func fetchLayout(id: UUID) async throws -> LevelLayout {
         guard let index = levels.firstIndex(where: { $0.id == id }) else {
             throw LevelError.notFound
         }
@@ -49,7 +48,7 @@ class MockLevelRepository:LevelRepository {
     }
 
     
-    func fetchAllLayouts() async throws -> [Layout] {
+    func fetchAllLayouts() async throws -> [LevelLayout] {
         return levels
     }
     

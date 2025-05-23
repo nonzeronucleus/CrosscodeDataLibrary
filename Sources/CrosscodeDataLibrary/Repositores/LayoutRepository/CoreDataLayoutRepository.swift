@@ -2,29 +2,30 @@ import Foundation
 import CoreData
 import Factory
 
-
-public class CoreDataLevelRepository: LevelRepository {
-    
+public class CoreDataLayoutRepository: LayoutRepository {
     private let context: NSManagedObjectContext
     
     // Injected via Factory
     public init(context: NSManagedObjectContext = Container.shared.managedObjectContext()) {
         self.context = context
     }
-
+    
     public func create(level: LevelLayout) throws {
-        let entity = NSEntityDescription.insertNewObject(forEntityName: "LevelMO", into: context) as! LevelMO
+        let entity = NSEntityDescription.insertNewObject(forEntityName: "LayoutMO", into: context) as! LayoutMO
         entity.populate(from: level)
         try CoreDataStack.shared.saveContext()
     }
     
-    public func fetchLayout(id: UUID) async throws -> LevelLayout {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
+        let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         fetchRequest.fetchLimit = 1
 
         do {
             let results = try context.fetch(fetchRequest)
+            if results.isEmpty {
+                return nil
+            }
             return results.first!.toLevel()
         } catch {
             context.rollback()
@@ -34,7 +35,7 @@ public class CoreDataLevelRepository: LevelRepository {
 
     
     public func saveLevel(level: LevelLayout) throws {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+        let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", level.id as CVarArg)
         fetchRequest.fetchLimit = 1
 
@@ -56,17 +57,17 @@ public class CoreDataLevelRepository: LevelRepository {
 
     
     public func fetchAllLayouts() async throws -> [LevelLayout] {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+        let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
         
         // 2. Execute the fetch request
         let results = try context.fetch(fetchRequest)
         
-        // 3. Convert each LevelMO to Level using toLevel()
+        // 3. Convert each LayoutMO to Level using toLevel()
         return results.map { $0.toLevel() }
     }
     
     public func getHighestLevelNumber() async throws -> Int {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+        let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "number", ascending: false)]
         fetchRequest.fetchLimit = 1
         
@@ -81,7 +82,7 @@ public class CoreDataLevelRepository: LevelRepository {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             context.perform {
                 do {
-                    let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+                    let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
                     fetchRequest.fetchLimit = 1
                     
@@ -102,7 +103,5 @@ public class CoreDataLevelRepository: LevelRepository {
             }
         }
     }
-    
-    // MARK: - Error Handling
     
 }

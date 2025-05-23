@@ -2,7 +2,7 @@ import Foundation
 import Factory
 
 protocol AddPlayableLevelUseCase {
-    func execute(layout: Layout) throws -> PlayableLevel
+    func execute(layout: LevelLayout) throws -> PlayableLevel
 }
 
 struct AddPlayableLevelUseCaseImpl: AddPlayableLevelUseCase {
@@ -12,7 +12,7 @@ struct AddPlayableLevelUseCaseImpl: AddPlayableLevelUseCase {
         self.repository = repository
     }
 
-    func execute(layout: Layout) throws -> PlayableLevel {
+    func execute(layout: LevelLayout) throws -> PlayableLevel {
         fatalError("\(#function) not implemented")
     }
 }

@@ -8,15 +8,6 @@ extension Container {
             .singleton
     }
     
-
-//    public var uuid: Factory<UUID> {
-//        Factory(self) {
-//          @Injected(\.uuidProvider) var uuidProvider
-//            return uuidProvider.uuid()
-//        }.singleton
-//    }
-
-    
     
     var useEmulator: Factory<Bool> {
         Factory(self) {

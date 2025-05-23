@@ -1,16 +1,15 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Factory",
-        "repositoryURL": "https://github.com/hmlongco/Factory",
-        "state": {
-          "branch": null,
-          "revision": "f1e35a1672fcb71a40ef6b7aaf1ea38a458c4485",
-          "version": "2.4.12"
-        }
+  "originHash" : "45acf5d446ae3612b9b37f166bd7f8f0c80d7c734b79dd0a261da20af83702fb",
+  "pins" : [
+    {
+      "identity" : "factory",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hmlongco/Factory",
+      "state" : {
+        "revision" : "56129530a97d89d03f610685d348d333af4989bb",
+        "version" : "2.5.2"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 3
 }

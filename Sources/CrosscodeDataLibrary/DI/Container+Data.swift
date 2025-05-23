@@ -11,4 +11,16 @@ public extension Container {
             CoreDataLevelRepository(context: self.managedObjectContext())
         }.singleton
     }
+    
+    var layoutRepository: Factory<LayoutRepository> {
+        Factory(self) {
+            CoreDataLayoutRepository(context: self.managedObjectContext())
+        }.singleton
+    }
+    
+    var importLayoutRepository: Factory<LayoutRepository> {
+        Factory(self) {
+            FileLayoutRepository()
+        }.singleton
+    }
 }

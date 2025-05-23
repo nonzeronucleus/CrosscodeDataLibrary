@@ -4,19 +4,19 @@ import Combine
 
 @MainActor  // Ensures CoreData operations run on the main thread
 final class SaveLevelUseCaseImpl: SaveLevelUseCase {
-    private let repository: LevelRepository
+    private let repository: LayoutRepository
     private var saveTask: Task<Void, Error>?
     private let debounceTime: UInt64 // in nanoseconds (e.g., 500_000_000 = 0.5s)
 
     init(
-        repository: LevelRepository = Container.shared.levelRepository(),
+        repository: LayoutRepository = Container.shared.layoutRepository(),
         debounceTime: UInt64 = 500_000_000 // Default: 0.5 seconds
     ) {
         self.repository = repository
         self.debounceTime = debounceTime
     }
 
-    func execute(level: Layout) async throws {
+    func execute(level: LevelLayout) async throws {
         // Cancel the previous task if it exists
         saveTask?.cancel()
 
@@ -37,7 +37,7 @@ final class SaveLevelUseCaseImpl: SaveLevelUseCase {
     }
 }
 public protocol SaveLevelUseCase {
-    func execute(level:Layout) async throws
+    func execute(level:LevelLayout) async throws
 }
 
 

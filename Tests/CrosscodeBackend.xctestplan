@@ -1,0 +1,18 @@
+{
+  "configurations" : [
+    {
+      "id" : "A36DF2F8-592C-41CE-99AF-56ECAD12DE50",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+
+  ],
+  "version" : 1
+}
