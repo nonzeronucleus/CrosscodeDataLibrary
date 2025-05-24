@@ -32,4 +32,12 @@ public class CoreDataStack {
             try context.save()
         }
     }
+    
+//    func printLocation() {
+//        if let storeURL = CoreDataStack.shared.persistentContainer.persistentStoreDescriptions.first?.url {
+//            print("Core Data Store Location:", storeURL.absoluteString)
+//        } else {
+//            print("No persistent store found.")
+//        }
+//    }
 }
