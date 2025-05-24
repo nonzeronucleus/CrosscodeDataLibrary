@@ -1,4 +1,5 @@
 import Foundation
+import Factory
 
 public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem, Sendable  {
     public let id: UUID
@@ -6,7 +7,9 @@ public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem, Send
     public var letter:Character?
     
     init(pos:Pos, letter:Character? = nil) {
-        self.id = UUID()
+        @Injected(\.uuid) var uuid
+        
+        self.id = uuid()
         self.letter = letter
         self.pos = pos
     }

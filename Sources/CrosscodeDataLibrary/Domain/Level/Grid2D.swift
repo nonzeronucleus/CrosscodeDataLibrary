@@ -1,5 +1,5 @@
 import Foundation
-
+import Factory
 
 public protocol Grid2DItem: Hashable, Codable, Sendable {
     func toStorable() -> Character
@@ -27,7 +27,8 @@ public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable, S
     }
 
     init(rows: Int, columns: Int, elementGenerator: (Int, Int) -> Element) {
-        self.id = UUID()
+        @Injected(\.uuid) var uuid
+        self.id = uuid()
         self.elements = (0..<rows).map { row in
             (0..<columns).map { column in
                 elementGenerator(row, column)
@@ -36,7 +37,7 @@ public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable, S
     }
     
     
-    subscript(row: Int, column: Int) -> Element {
+    public subscript(row: Int, column: Int) -> Element {
         get {
             precondition(isValidIndex(row: row, column: column), "Index out of bounds")
             return elements[row][column]
