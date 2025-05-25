@@ -22,6 +22,8 @@ public extension Crossword {
     }
     
     
+    
+    
     mutating func reset() {
         for rowIndex in elements.indices {
             for colIndex in elements[rowIndex].indices {
