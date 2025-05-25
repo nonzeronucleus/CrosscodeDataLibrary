@@ -5,6 +5,7 @@ public class CoreDataStack {
     nonisolated(unsafe) public static let shared = CoreDataStack()
 
     public let persistentContainer: NSPersistentContainer
+    private let debug = false
 
     private init() {
         let bundle = Bundle.module
@@ -18,7 +19,9 @@ public class CoreDataStack {
             if let error = error {
                 fatalError("Unresolved error \(error)")
             }
-            print("Core Data DB Location:", description.url?.absoluteString ?? "Unknown location")
+            if self.debug {
+                self.printLocation(description: description)
+            }
         }
     }
 
@@ -33,11 +36,7 @@ public class CoreDataStack {
         }
     }
     
-//    func printLocation() {
-//        if let storeURL = CoreDataStack.shared.persistentContainer.persistentStoreDescriptions.first?.url {
-//            print("Core Data Store Location:", storeURL.absoluteString)
-//        } else {
-//            print("No persistent store found.")
-//        }
-//    }
+    func printLocation(description: NSPersistentStoreDescription) {
+        debugPrint("Core Data DB Location:", description.url?.absoluteString ?? "Unknown location")
+    }
 }

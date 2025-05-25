@@ -12,6 +12,15 @@ public extension Container {
         }
     }
     
+    var fetchLayoutUseCase: Factory<FetchLayoutUseCaseProtocol> {
+        Factory(self) {
+            FetchLayoutUseCase(
+                repository: self.layoutRepository()
+            )
+        }
+    }
+
+    
     var addLayoutUsecase: Factory<AddLayoutUseCaseProtocol> {
         Factory(self) {
             AddLayoutUseCase(

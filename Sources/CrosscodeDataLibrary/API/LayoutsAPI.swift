@@ -10,6 +10,7 @@ public protocol LayoutsAPI {
 
     func addNewLayout() async throws -> [LevelLayout]
     
+    func fetchLayout(id:UUID) async throws -> LevelLayout?
     func fetchAllLayouts() async throws -> [LevelLayout]
     
     func deleteLayout(id: UUID) async throws -> [LevelLayout]
@@ -51,6 +52,12 @@ public class LayoutsAPIImpl : LayoutsAPI {
         let fetchAllUseCase: FetchAllLayoutsUseCaseProtocol = Container.shared.fetchAllLayoutsUseCase()
         return try await fetchAllUseCase.execute()
     }
+    
+    public func fetchLayout(id:UUID) async throws -> LevelLayout? {
+        let fetchLayoutUseCase: FetchLayoutUseCaseProtocol = Container.shared.fetchLayoutUseCase()
+        return try await fetchLayoutUseCase.execute(id: id)
+    }
+
     
     public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
         let deleteLayoutUseCase: DeleteLayoutUseCase = Container.shared.deleteLayoutUseCase()
