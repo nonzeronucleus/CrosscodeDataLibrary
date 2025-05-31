@@ -6,9 +6,9 @@ public extension Container {
         Factory(self) { CoreDataStack.shared.viewContext }
     }
     
-    var levelRepository: Factory<LevelRepository> {
+    var playableLevelRepository: Factory<PlayableLevelRepository> {
         Factory(self) {
-            CoreDataLevelRepository(context: self.managedObjectContext())
+            CoreDataPlayableLevelRepository(context: self.managedObjectContext())
         }.singleton
     }
     

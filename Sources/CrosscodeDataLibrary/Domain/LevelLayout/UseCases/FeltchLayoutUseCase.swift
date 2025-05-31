@@ -15,7 +15,7 @@ public final class FetchLayoutUseCase: FetchLayoutUseCaseProtocol {
     }
     
     public func execute(id:UUID) async throws -> LevelLayout? {
-        guard let layout = try await repository.fetchLayout(id: id) else {
+        guard let layout = try await repository.fetch(id: id) else {
             return nil
         }
         

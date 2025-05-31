@@ -11,7 +11,7 @@ public struct CrosscodeDataLibrary {
         Task {
             let fileRepository = FileLayoutRepository()
             do {
-                _ = try await fileRepository.fetchAllLayouts()
+                _ = try await fileRepository.fetchAll()
             } catch {
                 print("Error: \(error)")
             }

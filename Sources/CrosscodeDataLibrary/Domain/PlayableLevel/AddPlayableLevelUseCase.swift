@@ -6,9 +6,9 @@ protocol AddPlayableLevelUseCase {
 }
 
 struct AddPlayableLevelUseCaseImpl: AddPlayableLevelUseCase {
-    private let repository: LevelRepository
+    private let repository: PlayableLevelRepository
 
-    public init(repository: LevelRepository = Container.shared.levelRepository()) {
+    public init(repository: PlayableLevelRepository = Container.shared.playableLevelRepository()) {
         self.repository = repository
     }
 

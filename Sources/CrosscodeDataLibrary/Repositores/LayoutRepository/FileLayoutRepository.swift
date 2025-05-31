@@ -5,15 +5,15 @@ struct FileLayoutRepository : LayoutRepository {
         fatalError("\(#function) not implemented")
     }
     
-    func saveLevel(level: LevelLayout) throws {
+    func save(level: LevelLayout) throws {
         fatalError("\(#function) not implemented")
     }
     
-    func fetchAllLayouts() async throws -> [LevelLayout] {
+    func fetchAll() async throws -> [LevelLayout] {
         return try await readFromFile(fresourceFile: resourceFile)
     }
     
-    func fetchLayout(id: UUID) async throws -> LevelLayout? {
+    func fetch(id: UUID) async throws -> LevelLayout? {
         fatalError("\(#function) not implemented")
     }
     
@@ -21,7 +21,7 @@ struct FileLayoutRepository : LayoutRepository {
         fatalError("\(#function) not implemented")
     }
     
-    func deleteLayout(id: UUID) async throws {
+    func delete(id: UUID) async throws {
         fatalError("\(#function) not implemented")
     }
 }

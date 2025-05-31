@@ -3,8 +3,7 @@ import CoreData
 import Factory
 
 
-public class CoreDataLevelRepository: LevelRepository {
-    
+public class CoreDataPlayableLevelRepository: PlayableLevelRepository {
     private let context: NSManagedObjectContext
     
     // Injected via Factory
@@ -12,20 +11,20 @@ public class CoreDataLevelRepository: LevelRepository {
         self.context = context
     }
 
-    public func create(level: LevelLayout) throws {
+    public func create(level: PlayableLevel) throws {
         let entity = NSEntityDescription.insertNewObject(forEntityName: "LevelMO", into: context) as! LevelMO
         entity.populate(from: level)
         try CoreDataStack.shared.saveContext()
     }
     
-    public func fetchLayout(id: UUID) async throws -> LevelLayout {
+    public func fetch(id: UUID) async throws -> PlayableLevel {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         fetchRequest.fetchLimit = 1
 
         do {
             let results = try context.fetch(fetchRequest)
-            return results.first!.toLevel()
+            return results.first!.toLevel() 
         } catch {
             context.rollback()
             throw LevelError.coreDataError(error)
@@ -33,7 +32,7 @@ public class CoreDataLevelRepository: LevelRepository {
     }
 
     
-    public func saveLevel(level: LevelLayout) throws {
+    public func save(level: PlayableLevel) throws {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", level.id as CVarArg)
         fetchRequest.fetchLimit = 1
@@ -55,7 +54,7 @@ public class CoreDataLevelRepository: LevelRepository {
     }
 
     
-    public func fetchAllLayouts() async throws -> [LevelLayout] {
+    public func fetchAll() async throws -> [PlayableLevel] {
         let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
         
         // 2. Execute the fetch request
@@ -77,7 +76,7 @@ public class CoreDataLevelRepository: LevelRepository {
         return Int(firstResult.number)
     }
 
-    public func deleteLayout(id: UUID) async throws {
+    public func delete(id: UUID) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             context.perform {
                 do {

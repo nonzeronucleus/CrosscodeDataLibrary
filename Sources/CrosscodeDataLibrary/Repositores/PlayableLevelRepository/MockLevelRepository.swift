@@ -1,12 +1,13 @@
 import Factory
 
-class MockLevelRepository:LevelRepository {
+class MockLevelRepository: LayoutRepository {
+    
     var levels: [LevelLayout] = []
     
     private init() {
     }
  
-    static func create() -> LevelRepository {
+    static func create() -> LayoutRepository {
         do {
             let instance = MockLevelRepository()
             
@@ -28,7 +29,7 @@ class MockLevelRepository:LevelRepository {
         }
     }
     
-    func saveLevel(level: LevelLayout) throws {
+    func save(level: LevelLayout) throws {
         guard let index = levels.firstIndex(where: { $0.id == level.id }) else {
             throw LevelError.notFound
         }
@@ -40,15 +41,14 @@ class MockLevelRepository:LevelRepository {
         levels.append(level)
     }
     
-    func fetchLayout(id: UUID) async throws -> LevelLayout {
+    func fetch(id: UUID) async throws -> LevelLayout? {
         guard let index = levels.firstIndex(where: { $0.id == id }) else {
             throw LevelError.notFound
         }
         return levels[index]
     }
 
-    
-    func fetchAllLayouts() async throws -> [LevelLayout] {
+    func fetchAll() async throws -> [LevelLayout] {
         return levels
     }
     
@@ -56,7 +56,7 @@ class MockLevelRepository:LevelRepository {
         return levels.count
     }
     
-    func deleteLayout(id: UUID) async throws {
+    func delete(id: UUID) async throws {
         
     }
 }

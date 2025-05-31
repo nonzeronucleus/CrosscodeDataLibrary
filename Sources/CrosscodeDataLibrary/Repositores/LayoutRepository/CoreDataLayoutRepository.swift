@@ -16,7 +16,7 @@ public class CoreDataLayoutRepository: LayoutRepository {
         try CoreDataStack.shared.saveContext()
     }
     
-    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
+    public func fetch(id: UUID) async throws -> LevelLayout? {
         let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         fetchRequest.fetchLimit = 1
@@ -34,7 +34,7 @@ public class CoreDataLayoutRepository: LayoutRepository {
     }
 
     
-    public func saveLevel(level: LevelLayout) throws {
+    public func save(level: LevelLayout) throws {
         let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", level.id as CVarArg)
         fetchRequest.fetchLimit = 1
@@ -56,7 +56,7 @@ public class CoreDataLayoutRepository: LayoutRepository {
     }
 
     
-    public func fetchAllLayouts() async throws -> [LevelLayout] {
+    public func fetchAll() async throws -> [LevelLayout] {
         let fetchRequest: NSFetchRequest<LayoutMO> = LayoutMO.fetchRequest()
         
         // 2. Execute the fetch request
@@ -78,7 +78,7 @@ public class CoreDataLayoutRepository: LayoutRepository {
         return Int(firstResult.number)
     }
 
-    public func deleteLayout(id: UUID) async throws {
+    public func delete(id: UUID) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             context.perform {
                 do {

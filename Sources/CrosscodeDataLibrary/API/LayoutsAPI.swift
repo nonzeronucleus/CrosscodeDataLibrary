@@ -3,70 +3,94 @@ import Factory
 typealias PopulationTask = Task<(String, String), Error>
 
 
-public protocol LayoutsAPI {
-    func test() -> String
-    
+public protocol LayoutsAPI: LevelsAPI {
     func importLayouts() async throws
 
-    func addNewLayout() async throws -> [LevelLayout]
-    
-    func fetchLayout(id:UUID) async throws -> LevelLayout?
+    func fetchLayout(id:UUID) async throws -> (LevelLayout)?
+
     func fetchAllLayouts() async throws -> [LevelLayout]
-    
+
     func deleteLayout(id: UUID) async throws -> [LevelLayout]
     
-    func saveLevel(level: LevelLayout) async throws
+    func saveLayout(level: LevelLayout) async throws
+
+    func cancel() async
     
     func populateCrossword(crosswordLayout: String) async throws -> (String, String)
     
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
     
-    func cancel() async
+    func addNewLayout() async throws -> [LevelLayout]
 }
 
 
 public class LayoutsAPIImpl : LayoutsAPI {
-    // Actor for async operations
+// Actor for async operations
     private let actor = CrosscodeAPIActor()
     
-    public func test() -> String {
-        return "It's a test"
-    }
-
-
-
     required public init() {
     }
     
-    public func importLayouts() async throws {
+    public func importLevels() async throws {
         let importUseCase = Container.shared.importLayoutsUseCase()
         try await importUseCase.execute()
     }
 
-    public func addNewLayout() async throws -> [LevelLayout] {
-        let addLayoutUseCase: AddLayoutUseCaseProtocol = Container.shared.addLayoutUsecase()
-        return try await addLayoutUseCase.execute()
-    }
-    
-    public func fetchAllLayouts() async throws -> [LevelLayout] {
+    public func fetchAllLevels() async throws -> [any Level] {
         let fetchAllUseCase: FetchAllLayoutsUseCaseProtocol = Container.shared.fetchAllLayoutsUseCase()
         return try await fetchAllUseCase.execute()
     }
     
-    public func fetchLayout(id:UUID) async throws -> LevelLayout? {
+//    public func fetchLayout(id:UUID) async throws -> LevelLayout? {
+    public func fetchLevel(id:UUID) async throws -> (any Level)? {
         let fetchLayoutUseCase: FetchLayoutUseCaseProtocol = Container.shared.fetchLayoutUseCase()
         return try await fetchLayoutUseCase.execute(id: id)
     }
 
     
-    public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
+    public func deleteLevel(id: UUID) async throws -> [any Level] {
         let deleteLayoutUseCase: DeleteLayoutUseCase = Container.shared.deleteLayoutUseCase()
         return try await deleteLayoutUseCase.execute(id: id)
     }
     
-    public func saveLevel(level: LevelLayout) async throws {
+    public func saveLevel(level: any Level) async throws {
         let saveLevelUseCase: SaveLevelUseCase = Container.shared.saveLevelUseCase()
         try await saveLevelUseCase.execute(level: level)
+    }
+    
+
+    public func cancel() async {
+        await actor.cancel()
+    }
+}
+
+
+extension LayoutsAPIImpl {
+    public func importLayouts() async throws {
+        try await importLevels()
+    }
+    
+    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
+        return try await fetchLevel(id: id) as? LevelLayout
+    }
+    
+    public func fetchAllLayouts() async throws -> [LevelLayout] {
+        return try await fetchAllLevels() as? [LevelLayout] ?? []
+    }
+    
+    public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
+        return try await deleteLevel(id: id) as? [LevelLayout] ?? []
+    }
+    
+    public func saveLayout(level: LevelLayout) async throws {
+        try await saveLevel(level: level)
+    }
+}
+
+extension LayoutsAPIImpl {
+    public func addNewLayout() async throws -> [LevelLayout] {
+        let addLayoutUseCase: AddLayoutUseCaseProtocol = Container.shared.addLayoutUsecase()
+        return try await addLayoutUseCase.execute()
     }
     
     public func populateCrossword(crosswordLayout: String) async throws -> (String, String) {
@@ -78,12 +102,6 @@ public class LayoutsAPIImpl : LayoutsAPI {
         
         return depopulateCrosswordUseCase.execute(crosswordLayout: crosswordLayout)
     }
-    
-    
-    public func cancel() async {
-        await actor.cancel()
-    }
-    
 }
 
 private actor CrosscodeAPIActor {

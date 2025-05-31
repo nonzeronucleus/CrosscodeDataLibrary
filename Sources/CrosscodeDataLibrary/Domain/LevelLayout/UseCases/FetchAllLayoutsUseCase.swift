@@ -15,7 +15,7 @@ public final class FetchAllLayoutsUseCase: FetchAllLayoutsUseCaseProtocol {
     }
     
     public func execute() async throws -> [LevelLayout] {
-        try await repository.fetchAllLayouts()
+        try await repository.fetchAll()
     }
 }
 

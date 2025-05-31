@@ -6,9 +6,9 @@ extension Container {
             .register { IncrementingUUIDProvider() }
             .singleton
         
-        
-        let _ = Container.shared.levelRepository
-            .register { MockLevelRepository.create() }
-            .singleton
+//        
+//        let _ = Container.shared.levelRepository
+//            .register { MockLevelRepository.create() }
+//            .singleton
     }
 }

@@ -2,7 +2,7 @@ import Testing
 @testable import CrosscodeDataLibrary
 
 class MockLayoutRepository: LayoutRepository {
-    func saveLevel(level: LevelLayout) throws {
+    func save(level: LevelLayout) throws {
         fatalError("\(#function) not implemented")
     }
     
@@ -10,7 +10,7 @@ class MockLayoutRepository: LayoutRepository {
         fatalError("\(#function) not implemented")
     }
     
-    func deleteLayout(id: UUID) async throws {
+    func delete(id: UUID) async throws {
         fatalError("\(#function) not implemented")
     }
     
@@ -18,12 +18,12 @@ class MockLayoutRepository: LayoutRepository {
     var fetchError: Error?
     var createError: Error?
     
-    func fetchAllLayouts() async throws -> [LevelLayout] {
+    func fetchAll() async throws -> [LevelLayout] {
         if let fetchError { throw fetchError }
         return Array(storedLayouts.values)
     }
     
-    func fetchLayout(id: UUID) async throws -> LevelLayout? {
+    func fetch(id: UUID) async throws -> LevelLayout? {
         if let fetchError { throw fetchError }
         return storedLayouts[id]
     }

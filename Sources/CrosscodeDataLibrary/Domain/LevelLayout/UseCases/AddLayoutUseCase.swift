@@ -29,7 +29,7 @@ class AddLayoutUseCase: AddLayoutUseCaseProtocol {
         )
         
         try repository.create(level: layout)
-        return try await repository.fetchAllLayouts()
+        return try await repository.fetchAll()
     }
 }
 

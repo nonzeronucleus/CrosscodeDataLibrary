@@ -15,9 +15,9 @@ public final class DeleteLayoutUseCaseImpl: DeleteLayoutUseCase {
     }
     
     public func execute(id: UUID) async throws -> [LevelLayout] {
-        try await repository.deleteLayout(id: id)
+        try await repository.delete(id: id)
 
-        return try await repository.fetchAllLayouts()
+        return try await repository.fetchAll()
     }
 }
 

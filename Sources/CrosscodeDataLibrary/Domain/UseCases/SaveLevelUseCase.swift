@@ -3,7 +3,7 @@ import Factory
 import Combine
 
 @MainActor  // Ensures CoreData operations run on the main thread
-final class SaveLevelUseCaseImpl: SaveLevelUseCase {
+final class SaveLevelLayoutUseCaseImpl: SaveLevelUseCase {
     private let repository: LayoutRepository
     private var saveTask: Task<Void, Error>?
     private let debounceTime: UInt64 // in nanoseconds (e.g., 500_000_000 = 0.5s)
@@ -16,7 +16,11 @@ final class SaveLevelUseCaseImpl: SaveLevelUseCase {
         self.debounceTime = debounceTime
     }
 
-    func execute(level: LevelLayout) async throws {
+    func execute(level: any Level) async throws {
+        guard let layout = level as? LevelLayout else {
+            fatalError("Invalid level type provided")
+        }
+        
         // Cancel the previous task if it exists
         saveTask?.cancel()
 
@@ -29,15 +33,16 @@ final class SaveLevelUseCaseImpl: SaveLevelUseCase {
             try Task.checkCancellation()
 
             // Proceed with save (runs on MainActor)
-            try self?.repository.saveLevel(level: level)
+            try self?.repository.save(level: layout)
         }
 
         // Await the task's result (propagates errors if needed)
         try await saveTask?.value
     }
 }
+
 public protocol SaveLevelUseCase {
-    func execute(level:LevelLayout) async throws
+    func execute(level:any Level) async throws
 }
 
 

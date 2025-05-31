@@ -3,20 +3,16 @@ import Factory
 //typealias PopulationTask = Task<(String, String), Error>
 //
 public class PlayableLevelsAPI {
-    public static var shared: Self {
-//        Container.shared.setupTestMocks()
-        return .init()
-    }
-//    
+//
     // Injected dependencies
-    private let repository: LevelRepository
+    private let repository: PlayableLevelRepository
 //
 //    // Actor for async operations
 //    private let actor = CrosscodeAPIActor()
 //
 //
     required public init(
-        repository: LevelRepository = Container.shared.levelRepository()
+        repository: PlayableLevelRepository = Container.shared.playableLevelRepository()
     ) {
         self.repository = repository
     }

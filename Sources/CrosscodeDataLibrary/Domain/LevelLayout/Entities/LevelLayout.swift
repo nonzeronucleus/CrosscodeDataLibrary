@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LevelLayout: Identifiable, Equatable, Hashable, Sendable, Codable {
+public struct LevelLayout: Level, Identifiable, Equatable, Hashable, Sendable, Codable {
     public var id: UUID
     public var number: Int?
     public var crossword: Crossword
