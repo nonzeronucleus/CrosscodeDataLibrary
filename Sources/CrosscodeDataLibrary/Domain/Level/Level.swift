@@ -8,4 +8,6 @@
 
 
 
-public protocol Level: Identifiable, Sendable, Equatable where ID == UUID {}
+public protocol Level: Identifiable, Sendable, Encodable, Equatable where ID == UUID {
+    static var api: LevelsAPI { get }
+}

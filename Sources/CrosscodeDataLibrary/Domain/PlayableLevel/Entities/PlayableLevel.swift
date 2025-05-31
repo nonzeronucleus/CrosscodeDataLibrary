@@ -144,4 +144,11 @@ extension PlayableLevel: Codable {
         packId = try container.decodeIfPresent(UUID.self, forKey: .packId)
         isLocked = try container.decode(Bool.self, forKey: .isLocked)
     }
+    
+    public static var api: LevelsAPI { get {
+        fatalError("\(#function) not implemented")
+//        @Injected(\.layoutsAPI) var api
+//        return api
+    }}
+
 }

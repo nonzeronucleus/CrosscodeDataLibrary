@@ -1,4 +1,5 @@
 import Foundation
+import Factory
 
 public struct LevelLayout: Level, Identifiable, Equatable, Hashable, Sendable, Codable {
     public var id: UUID
@@ -79,5 +80,11 @@ extension LevelLayout {
         try container.encode(crossword.layoutString(), forKey: .crossword)
         try container.encodeIfPresent(letterMap?.toJSON(), forKey: .letterMap)
     }
-    
+
+    public static var api: LevelsAPI { get {
+        @Injected(\.layoutsAPI) var api
+        return api
+    }}
+        
+
 }
