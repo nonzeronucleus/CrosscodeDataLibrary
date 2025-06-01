@@ -4,18 +4,27 @@ import CoreData
 // Main container setup
 public extension Container {
     // MARK: - Layouts
-    var fetchAllLayoutsUseCase: Factory<FetchAllLayoutsUseCaseProtocol> {
+    var fetchAllLayoutsUseCase: Factory<FetchAllLevelsUseCaseProtocol> {
         Factory(self) {
-            FetchAllLayoutsUseCase(
-                repository: self.layoutRepository()
+            FetchAllLevelsUseCase(
+                repository: self.levelRepository()
             )
         }
     }
     
+//    var fetchAllLayoutsUseCase: Factory<FetchAllLayoutsUseCaseProtocol> {
+//        Factory(self) {
+//            FetchAllLayoutsUseCase(
+//                repository: self.layoutRepository()
+//            )
+//        }
+//    }
+
     var fetchLayoutUseCase: Factory<FetchLayoutUseCaseProtocol> {
         Factory(self) {
             FetchLayoutUseCase(
-                repository: self.layoutRepository()
+//                repository: self.layoutRepository()
+                repository: self.levelRepository()
             )
         }
     }
@@ -40,8 +49,8 @@ public extension Container {
     var saveLevelUseCase: Factory<SaveLevelUseCase> {
         Factory(self) { @MainActor in
             SaveLevelLayoutUseCaseImpl(
-//                repository: self.levelRepository(),
-                repository: self.layoutRepository(),
+                repository: self.levelRepository(),
+//                repository: self.layoutRepository(),
 
                 debounceTime: 500_000_000 // 0.5s debounce
             )

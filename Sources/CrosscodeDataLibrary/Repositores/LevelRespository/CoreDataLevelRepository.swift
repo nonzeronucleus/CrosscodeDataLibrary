@@ -3,28 +3,40 @@ import CoreData
 import Factory
 
 
-public class CoreDataPlayableLevelRepository: PlayableLevelRepository {
+public protocol LevelRepository {
+    func save(level:any Level) throws
+    
+    func fetchAll() async throws -> [any Level]
+    func fetch(id: UUID) async throws -> (any Level)?
+
+    func getHighestLevelNumber() async throws -> Int
+    
+    func delete(id: UUID) async throws
+}
+
+
+
+class CoreDataLevelRepository<L: LevelMO>: LevelRepository {
     private let context: NSManagedObjectContext
     
     // Injected via Factory
     public init(context: NSManagedObjectContext = Container.shared.managedObjectContext()) {
         self.context = context
     }
-
-    public func create(level: PlayableLevel) throws {
-        let entity = NSEntityDescription.insertNewObject(forEntityName: "LevelMO", into: context) as! LevelMO
-        entity.populate(from: level)
-        try CoreDataStack.shared.saveContext()
-    }
     
-    public func fetch(id: UUID) async throws -> PlayableLevel {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+    public func fetch(id: UUID) async throws -> (any Level)? {
+        let fetchRequest: NSFetchRequest = L.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         fetchRequest.fetchLimit = 1
 
         do {
-            let results = try context.fetch(fetchRequest)
-            return results.first!.toLevel() 
+            guard let results = try context.fetch(fetchRequest) as? [L] else {
+                fatalError("Failed to fetch LevelMO")
+            }
+            if results.isEmpty {
+                return nil
+            }
+            return results.first!.toLevel()
         } catch {
             context.rollback()
             throw LevelError.coreDataError(error)
@@ -32,13 +44,15 @@ public class CoreDataPlayableLevelRepository: PlayableLevelRepository {
     }
 
     
-    public func save(level: PlayableLevel) throws {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+    public func save(level: any Level) throws {
+        let fetchRequest: NSFetchRequest = L.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", level.id as CVarArg)
         fetchRequest.fetchLimit = 1
 
         do {
-            let results = try context.fetch(fetchRequest)
+            guard let results = try context.fetch(fetchRequest) as? [L] else {
+                fatalError("Failed to fetch LevelMO")
+            }
             
             guard let existingLevel = results.first else {
                 throw LevelError.notFound
@@ -54,23 +68,26 @@ public class CoreDataPlayableLevelRepository: PlayableLevelRepository {
     }
 
     
-    public func fetchAll() async throws -> [PlayableLevel] {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+    public func fetchAll() async throws -> [any Level] {
+        let fetchRequest: NSFetchRequest = L.fetchRequest()
+
+        guard let results = try context.fetch(fetchRequest) as? [L] else {
+            fatalError("Failed to fetch LevelMO")
+        }
         
-        // 2. Execute the fetch request
-        let results = try context.fetch(fetchRequest)
-        
-        // 3. Convert each LevelMO to Level using toLevel()
         return results.map { $0.toLevel() }
     }
     
     public func getHighestLevelNumber() async throws -> Int {
-        let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+        let fetchRequest: NSFetchRequest = L.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "number", ascending: false)]
         fetchRequest.fetchLimit = 1
         
-        let results = try context.fetch(fetchRequest)
-        guard let firstResult = results.first else {
+        guard let results = try context.fetch(fetchRequest) as? [L] else {
+            fatalError("Failed to fetch LevelMO")
+        }
+        
+        guard let firstResult:L = results.first else {
             return 0
         }
         return Int(firstResult.number)
@@ -80,11 +97,13 @@ public class CoreDataPlayableLevelRepository: PlayableLevelRepository {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             context.perform {
                 do {
-                    let fetchRequest: NSFetchRequest<LevelMO> = LevelMO.fetchRequest()
+                    let fetchRequest: NSFetchRequest = L.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
                     fetchRequest.fetchLimit = 1
                     
-                    let results = try self.context.fetch(fetchRequest)
+                    guard let results = try self.context.fetch(fetchRequest) as? [L] else {
+                        fatalError("Failed to fetch LevelMO")
+                    }
                     
                     guard let levelToDelete = results.first else {
                         continuation.resume(throwing: LevelError.notFound)
@@ -102,6 +121,7 @@ public class CoreDataPlayableLevelRepository: PlayableLevelRepository {
         }
     }
     
-    // MARK: - Error Handling
-    
 }
+
+
+

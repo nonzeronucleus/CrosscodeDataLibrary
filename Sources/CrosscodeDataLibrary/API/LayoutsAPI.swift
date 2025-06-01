@@ -37,7 +37,7 @@ public class LayoutsAPIImpl : LayoutsAPI {
     }
 
     public func fetchAllLevels() async throws -> [any Level] {
-        let fetchAllUseCase: FetchAllLayoutsUseCaseProtocol = Container.shared.fetchAllLayoutsUseCase()
+        let fetchAllUseCase = Container.shared.fetchAllLayoutsUseCase()
         return try await fetchAllUseCase.execute()
     }
     

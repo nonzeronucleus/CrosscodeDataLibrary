@@ -1,6 +1,6 @@
 import CoreData
 
-extension LevelMO {
+extension PlayableLevelMO {
     func populate(from level: PlayableLevel) {
         self.id = level.id
         self.number = Int64(level.number ?? 0)
