@@ -7,35 +7,36 @@ public extension Container {
     var fetchAllLayoutsUseCase: Factory<FetchAllLevelsUseCaseProtocol> {
         Factory(self) {
             FetchAllLevelsUseCase(
-                repository: self.levelRepository()
+                repository: self.layoutRepository()
             )
         }
     }
     
-//    var fetchAllLayoutsUseCase: Factory<FetchAllLayoutsUseCaseProtocol> {
-//        Factory(self) {
-//            FetchAllLayoutsUseCase(
-//                repository: self.layoutRepository()
-//            )
-//        }
-//    }
+    var fetchAllPlayableLevelssUseCase: Factory<FetchAllLevelsUseCaseProtocol> {
+        Factory(self) {
+            FetchAllLevelsUseCase(
+                repository: self.playableLevelRepository()
+            )
+        }
+    }
 
+    
     var fetchLayoutUseCase: Factory<FetchLayoutUseCaseProtocol> {
         Factory(self) {
             FetchLayoutUseCase(
-//                repository: self.layoutRepository()
-                repository: self.levelRepository()
+                repository: self.layoutRepository()
             )
         }
     }
 
     
     var addLayoutUsecase: Factory<AddLayoutUseCaseProtocol> {
-        Factory(self) {
-            AddLayoutUseCase(
-                repository: self.layoutRepository()
-            )
-        }
+        fatalError("\(#function) not implemented")
+//        Factory(self) {
+//            AddLayoutUseCase(
+//                repository: self.layoutRepository()
+//            )
+//        }
     }
     
     var deleteLayoutUseCase: Factory<DeleteLayoutUseCase> {
@@ -49,9 +50,7 @@ public extension Container {
     var saveLevelUseCase: Factory<SaveLevelUseCase> {
         Factory(self) { @MainActor in
             SaveLevelLayoutUseCaseImpl(
-                repository: self.levelRepository(),
-//                repository: self.layoutRepository(),
-
+                repository: self.layoutRepository(),
                 debounceTime: 500_000_000 // 0.5s debounce
             )
         }
@@ -73,11 +72,11 @@ public extension Container {
     
     // Mark: - PlayableLevels
     
-    internal var addPlayableLevelUseCase: Factory<AddPlayableLevelUseCase> {
-        Factory(self) {
-            AddPlayableLevelUseCaseImpl()
-        }
-    }
+//    internal var addPlayableLevelUseCase: Factory<AddPlayableLevelUseCase> {
+//        Factory(self) {
+//            AddPlayableLevelUseCaseImpl()
+//        }
+//    }
     
     internal var importLayoutsUseCase: Factory<ImportLayoutsUseCase> {
         Factory(self) {

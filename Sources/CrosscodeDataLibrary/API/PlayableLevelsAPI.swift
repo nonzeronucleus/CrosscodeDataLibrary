@@ -2,24 +2,45 @@ import Factory
 //
 //typealias PopulationTask = Task<(String, String), Error>
 //
-public class PlayableLevelsAPI {
+public class PlayableLevelsAPIImpl:LevelsAPI{
+    public func importLevels() async throws {
+        fatalError("\(#function) not implemented")
+    }
+    
+    public func fetchLevel(id: UUID) async throws -> (any Level)? {
+        fatalError("\(#function) not implemented")
+    }
+    
+    public func fetchAllLevels() async throws -> [any Level] {
+        let fetchAllUseCase = Container.shared.fetchAllPlayableLevelssUseCase()
+        return try await fetchAllUseCase.execute()
+    }
+    
+    public func deleteLevel(id: UUID) async throws -> [any Level] {
+        fatalError("\(#function) not implemented")
+    }
+    
+    public func saveLevel(level: any Level) async throws {
+        fatalError("\(#function) not implemented")
+    }
+    
+    public func cancel() async {
+        fatalError("\(#function) not implemented")
+    }
+    
 //
-    // Injected dependencies
-    private let repository: PlayableLevelRepository
-//
+    // Injected dependencies//
 //    // Actor for async operations
 //    private let actor = CrosscodeAPIActor()
 //
 //
-    required public init(
-        repository: PlayableLevelRepository = Container.shared.playableLevelRepository()
-    ) {
-        self.repository = repository
+    required public init() {
     }
     
     public func addNewLevel(layout:LevelLayout) async throws -> PlayableLevel {
-        let addNewLevelUseCase: AddPlayableLevelUseCase = Container.shared.addPlayableLevelUseCase()
-        return try addNewLevelUseCase.execute(layout: layout)
+        fatalError("\(#function) not implemented")
+//        let addNewLevelUseCase: AddPlayableLevelUseCase = Container.shared.addPlayableLevelUseCase()
+//        return try addNewLevelUseCase.execute(layout: layout)
 
     }
     

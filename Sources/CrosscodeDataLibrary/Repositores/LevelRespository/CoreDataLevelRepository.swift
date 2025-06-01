@@ -70,9 +70,17 @@ class CoreDataLevelRepository<L: LevelMO>: LevelRepository {
     
     public func fetchAll() async throws -> [any Level] {
         let fetchRequest: NSFetchRequest = L.fetchRequest()
+        
+        
 
         guard let results = try context.fetch(fetchRequest) as? [L] else {
             fatalError("Failed to fetch LevelMO")
+        }
+        
+        print("Type is: \(L.self)")
+
+        if L.Type.self  == PlayableLevelMO.self {
+            debugPrint("PlayableLevel")
         }
         
         return results.map { $0.toLevel() }

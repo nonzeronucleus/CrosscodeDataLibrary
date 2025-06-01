@@ -6,4 +6,11 @@ public extension Container {
             LayoutsAPIImpl()
         }.singleton
     }
+    
+    var playableLevelsAPI: Factory<LevelsAPI> {
+        Factory(self) {
+            PlayableLevelsAPIImpl()
+        }.singleton
+    }
+
 }

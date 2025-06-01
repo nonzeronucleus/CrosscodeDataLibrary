@@ -11,7 +11,7 @@ final class SaveLevelLayoutUseCaseImpl: SaveLevelUseCase {
 
     init(
 //        repository: LayoutRepository = Container.shared.layoutRepository(),
-        repository: LevelRepository = Container.shared.levelRepository(),
+        repository: LevelRepository = Container.shared.layoutRepository(),
         debounceTime: UInt64 = 500_000_000 // Default: 0.5 seconds
     ) {
         self.repository = repository

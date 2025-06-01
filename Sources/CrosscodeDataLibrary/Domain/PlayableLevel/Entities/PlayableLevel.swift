@@ -1,4 +1,5 @@
 import Foundation
+import Factory
 
 public struct PlayableLevel: Level, Identifiable, Equatable, Hashable, Sendable {
     public var id: UUID { layout.id }
@@ -146,9 +147,8 @@ extension PlayableLevel: Codable {
     }
     
     public static var api: LevelsAPI { get {
-        fatalError("\(#function) not implemented")
-//        @Injected(\.layoutsAPI) var api
-//        return api
+        @Injected(\.playableLevelsAPI) var api
+        return api
     }}
 
 }
