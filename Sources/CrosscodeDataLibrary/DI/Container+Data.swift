@@ -18,9 +18,9 @@ public extension Container {
         }.singleton
     }
     
-//    var importLayoutRepository: Factory<LayoutRepository> {
-//        Factory(self) {
-//            FileLayoutRepository()
-//        }.singleton
-//    }
+    var importLayoutRepository: Factory<LayoutRepository> {
+        Factory(self) {
+            FileLayoutRepository()
+        }.singleton
+    }
 }

@@ -4,18 +4,6 @@ typealias PopulationTask = Task<(String, String), Error>
 
 
 public protocol LayoutsAPI: LevelsAPI {
-//    func importLayouts() async throws
-//
-//    func fetchLayout(id:UUID) async throws -> (LevelLayout)?
-//
-//    func fetchAllLayouts() async throws -> [LevelLayout]
-//
-//    func deleteLayout(id: UUID) async throws -> [LevelLayout]
-//    
-//    func saveLayout(level: LevelLayout) async throws
-//
-//    func cancel() async
-//    
     func populateCrossword(crosswordLayout: String) async throws -> (String, String)
     
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
@@ -36,9 +24,9 @@ public class LayoutsAPIImpl : LayoutsAPI {
     }
     
     public func importLevels() async throws {
-        fatalError("\(#function) not implemented")
-//        let importUseCase = Container.shared.importLayoutsUseCase()
-//        try await importUseCase.execute()
+//        fatalError("\(#function) not implemented")
+        let importUseCase = Container.shared.importLayoutsUseCase()
+        try await importUseCase.execute()
     }
 
     public func fetchAllLevels() async throws -> [any Level] {
@@ -62,7 +50,6 @@ public class LayoutsAPIImpl : LayoutsAPI {
         let saveLevelUseCase: SaveLevelUseCase = Container.shared.saveLevelUseCase()
         try await saveLevelUseCase.execute(level: level)
     }
-    
 
     public func cancel() async {
         await actor.cancel()

@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol LayoutRepository {
+public protocol LayoutRepository : LevelRepository {
     func create(level: LevelLayout) throws
 //    func save(level:LevelLayout) throws
 //    

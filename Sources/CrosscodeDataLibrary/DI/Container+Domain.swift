@@ -78,10 +78,10 @@ public extension Container {
 //        }
 //    }
     
-//    internal var importLayoutsUseCase: Factory<ImportLayoutsUseCase> {
-//        Factory(self) {
-//            ImportLayoutsUseCaseImpl(repository: self.layoutRepository(), fileRepository: self.importLayoutRepository())
-//        }
-//    }
+    internal var importLayoutsUseCase: Factory<ImportLevelsUseCase> {
+        Factory(self) {
+            ImportLevelsUseCaseImpl(repository: self.layoutRepository(), fileRepository: self.importLayoutRepository())
+        }
+    }
 
 }
