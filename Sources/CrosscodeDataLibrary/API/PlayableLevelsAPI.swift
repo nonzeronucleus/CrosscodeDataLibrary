@@ -3,6 +3,10 @@ import Factory
 //typealias PopulationTask = Task<(String, String), Error>
 //
 public class PlayableLevelsAPIImpl:LevelsAPI{
+    public func addNewLevel() async throws -> [any Level] {
+        fatalError("\(#function) not implemented")
+    }
+    
     public func importLevels() async throws {
         fatalError("\(#function) not implemented")
     }

@@ -1,5 +1,7 @@
 public protocol LevelsAPI {
     func importLevels() async throws
+    
+    func addNewLevel() async throws -> [any Level]
 
     func fetchLevel(id:UUID) async throws -> (any Level)?
 

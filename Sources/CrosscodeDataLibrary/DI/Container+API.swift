@@ -1,7 +1,7 @@
 import Factory
 
 public extension Container {
-    var layoutsAPI: Factory<LayoutsAPI> {
+    var layoutsAPI: Factory<LevelsAPI> {
         Factory(self) {
             LayoutsAPIImpl()
         }.singleton

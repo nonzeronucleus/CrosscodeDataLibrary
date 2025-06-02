@@ -6,18 +6,6 @@ public extension Container {
         Factory(self) { CoreDataStack.shared.viewContext }
     }
     
-//    var playableLevelRepository: Factory<PlayableLevelRepository> {
-//        Factory(self) {
-//            CoreDataPlayableLevelRepository(context: self.managedObjectContext())
-//        }.singleton
-//    }
-    
-//    var layoutRepository: Factory<LayoutRepository> {
-//        Factory(self) {
-//            CoreDataLayoutRepository(context: self.managedObjectContext())
-//        }.singleton
-//    }
-//    
     var layoutRepository: Factory<LevelRepository> {
         Factory(self) {
             CoreDataLevelRepository<LayoutMO>(context: self.managedObjectContext())
@@ -30,9 +18,9 @@ public extension Container {
         }.singleton
     }
     
-    var importLayoutRepository: Factory<LayoutRepository> {
-        Factory(self) {
-            FileLayoutRepository()
-        }.singleton
-    }
+//    var importLayoutRepository: Factory<LayoutRepository> {
+//        Factory(self) {
+//            FileLayoutRepository()
+//        }.singleton
+//    }
 }

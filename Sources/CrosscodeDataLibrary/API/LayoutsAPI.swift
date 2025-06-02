@@ -4,27 +4,31 @@ typealias PopulationTask = Task<(String, String), Error>
 
 
 public protocol LayoutsAPI: LevelsAPI {
-    func importLayouts() async throws
-
-    func fetchLayout(id:UUID) async throws -> (LevelLayout)?
-
-    func fetchAllLayouts() async throws -> [LevelLayout]
-
-    func deleteLayout(id: UUID) async throws -> [LevelLayout]
-    
-    func saveLayout(level: LevelLayout) async throws
-
-    func cancel() async
-    
+//    func importLayouts() async throws
+//
+//    func fetchLayout(id:UUID) async throws -> (LevelLayout)?
+//
+//    func fetchAllLayouts() async throws -> [LevelLayout]
+//
+//    func deleteLayout(id: UUID) async throws -> [LevelLayout]
+//    
+//    func saveLayout(level: LevelLayout) async throws
+//
+//    func cancel() async
+//    
     func populateCrossword(crosswordLayout: String) async throws -> (String, String)
     
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
-    
-    func addNewLayout() async throws -> [LevelLayout]
+//    
+//    func addNewLayout() async throws -> [LevelLayout]
 }
 
 
 public class LayoutsAPIImpl : LayoutsAPI {
+    public func addNewLayout() async throws -> [LevelLayout] {
+        return try await addNewLevel() as? [LevelLayout] ?? []
+    }
+    
 // Actor for async operations
     private let actor = CrosscodeAPIActor()
     
@@ -32,8 +36,9 @@ public class LayoutsAPIImpl : LayoutsAPI {
     }
     
     public func importLevels() async throws {
-        let importUseCase = Container.shared.importLayoutsUseCase()
-        try await importUseCase.execute()
+        fatalError("\(#function) not implemented")
+//        let importUseCase = Container.shared.importLayoutsUseCase()
+//        try await importUseCase.execute()
     }
 
     public func fetchAllLevels() async throws -> [any Level] {
@@ -65,30 +70,30 @@ public class LayoutsAPIImpl : LayoutsAPI {
 }
 
 
-extension LayoutsAPIImpl {
-    public func importLayouts() async throws {
-        try await importLevels()
-    }
-    
-    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
-        return try await fetchLevel(id: id) as? LevelLayout
-    }
-    
-    public func fetchAllLayouts() async throws -> [LevelLayout] {
-        return try await fetchAllLevels() as? [LevelLayout] ?? []
-    }
-    
-    public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
-        return try await deleteLevel(id: id) as? [LevelLayout] ?? []
-    }
-    
-    public func saveLayout(level: LevelLayout) async throws {
-        try await saveLevel(level: level)
-    }
-}
+//extension LayoutsAPIImpl {
+//    public func importLayouts() async throws {
+//        try await importLevels()
+//    }
+//    
+//    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
+//        return try await fetchLevel(id: id) as? LevelLayout
+//    }
+//    
+//    public func fetchAllLayouts() async throws -> [LevelLayout] {
+//        return try await fetchAllLevels() as? [LevelLayout] ?? []
+//    }
+//    
+//    public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
+//        return try await deleteLevel(id: id) as? [LevelLayout] ?? []
+//    }
+//    
+//    public func saveLayout(level: LevelLayout) async throws {
+//        try await saveLevel(level: level)
+//    }
+//}
 
 extension LayoutsAPIImpl {
-    public func addNewLayout() async throws -> [LevelLayout] {
+    public func addNewLevel() async throws -> [any Level] {
         let addLayoutUseCase: AddLayoutUseCaseProtocol = Container.shared.addLayoutUsecase()
         return try await addLayoutUseCase.execute()
     }

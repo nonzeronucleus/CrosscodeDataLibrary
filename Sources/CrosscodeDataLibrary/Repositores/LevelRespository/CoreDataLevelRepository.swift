@@ -4,6 +4,8 @@ import Factory
 
 
 public protocol LevelRepository {
+    func create(level: any Level) throws
+    
     func save(level:any Level) throws
     
     func fetchAll() async throws -> [any Level]
@@ -77,12 +79,6 @@ class CoreDataLevelRepository<L: LevelMO>: LevelRepository {
             fatalError("Failed to fetch LevelMO")
         }
         
-        print("Type is: \(L.self)")
-
-        if L.Type.self  == PlayableLevelMO.self {
-            debugPrint("PlayableLevel")
-        }
-        
         return results.map { $0.toLevel() }
     }
     
@@ -129,6 +125,11 @@ class CoreDataLevelRepository<L: LevelMO>: LevelRepository {
         }
     }
     
+    public func create(level: any Level) throws {
+        let entity = NSEntityDescription.insertNewObject(forEntityName: "\(L.self)", into: context) as! LevelMO
+        entity.populate(from: level)
+        try CoreDataStack.shared.saveContext()
+    }
 }
 
 

@@ -7,16 +7,16 @@ public struct CrosscodeDataLibrary {
     }
     
 //    @MainActor
-    public static func printLayout() {
-        Task {
-            let fileRepository = FileLayoutRepository()
-            do {
-                _ = try await fileRepository.fetchAll()
-            } catch {
-                print("Error: \(error)")
-            }
-        }
-    }
+//    public static func printLayout() {
+//        Task {
+//            let fileRepository = FileLayoutRepository()
+//            do {
+//                _ = try await fileRepository.fetchAll()
+//            } catch {
+//                print("Error: \(error)")
+//            }
+//        }
+//    }
 }
 
 
