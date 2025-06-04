@@ -7,8 +7,8 @@ public protocol LayoutsAPI: LevelsAPI {
     func populateCrossword(crosswordLayout: String) async throws -> (String, String)
     
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
-//    
-//    func addNewLayout() async throws -> [LevelLayout]
+
+    func addNewLayout() async throws -> [LevelLayout]
 }
 
 

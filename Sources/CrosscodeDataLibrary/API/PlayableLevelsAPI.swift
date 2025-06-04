@@ -8,7 +8,7 @@ public class PlayableLevelsAPIImpl:LevelsAPI{
         print("PlayableLevelsAPIImpl")
     }
 
-    public func addNewLevel() async throws -> [any Level] {
+    public func addNewLevel(layout:LevelLayout) async throws -> [any Level] {
         fatalError("\(#function) not implemented")
     }
     
