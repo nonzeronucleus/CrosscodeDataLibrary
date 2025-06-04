@@ -54,6 +54,11 @@ public class LayoutsAPIImpl : LayoutsAPI {
     public func cancel() async {
         await actor.cancel()
     }
+    
+    public func printTest() {
+        print("LayoutsAPIImpl")
+    }
+
 }
 
 

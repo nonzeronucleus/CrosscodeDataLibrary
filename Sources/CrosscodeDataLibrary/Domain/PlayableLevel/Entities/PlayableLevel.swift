@@ -146,9 +146,9 @@ extension PlayableLevel: Codable {
         isLocked = try container.decode(Bool.self, forKey: .isLocked)
     }
     
-    public static var api: LevelsAPI { get {
-        @Injected(\.playableLevelsAPI) var api
-        return api
-    }}
+//    public static var api: LevelsAPI { get {
+    public static func getApi() -> APIType {
+        return .playableLevelsAPI
+    }
 
 }

@@ -1,3 +1,9 @@
+public enum APIType {
+    case layoutsAPI
+    case playableLevelsAPI
+}
+
+
 public protocol LevelsAPI {
     func importLevels() async throws
     
@@ -12,4 +18,6 @@ public protocol LevelsAPI {
     func saveLevel(level: any Level) async throws
 
     func cancel() async
+    
+    func printTest()
 }

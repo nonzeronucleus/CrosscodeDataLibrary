@@ -2,6 +2,16 @@ import Testing
 @testable import CrosscodeDataLibrary
 
 class MockLayoutRepository: LayoutRepository {
+    func create(level: any Level) throws {
+        if let createError { throw createError }
+        storedLayouts[level.id] = level as? LevelLayout
+    }
+    
+    func save(level: any Level) throws {
+        fatalError("\(#function) not implemented")
+    }
+    
+    
     func save(level: LevelLayout) throws {
         fatalError("\(#function) not implemented")
     }
@@ -18,12 +28,14 @@ class MockLayoutRepository: LayoutRepository {
     var fetchError: Error?
     var createError: Error?
     
-    func fetchAll() async throws -> [LevelLayout] {
+//    func fetchAll() async throws -> [LevelLayout] {
+    func fetchAll() async throws -> [any Level] {
+
         if let fetchError { throw fetchError }
         return Array(storedLayouts.values)
     }
     
-    func fetch(id: UUID) async throws -> LevelLayout? {
+    func fetch(id: UUID) async throws -> (any Level)? {
         if let fetchError { throw fetchError }
         return storedLayouts[id]
     }
@@ -52,7 +64,7 @@ extension LevelLayout {
 }
 
 class ImportLayoutsUseCaseTests {
-    var sut: ImportLayoutsUseCaseImpl!
+    var sut: ImportLevelsUseCaseImpl!
     var mockMainRepository: MockLayoutRepository!
     var mockFileRepository: MockLayoutRepository!
     
@@ -61,7 +73,7 @@ class ImportLayoutsUseCaseTests {
         mockFileRepository = MockLayoutRepository()
         
         // Initialize SUT with dependencies
-        sut = ImportLayoutsUseCaseImpl(
+        sut = ImportLevelsUseCaseImpl(
             repository: mockMainRepository,
             fileRepository: mockFileRepository
         )

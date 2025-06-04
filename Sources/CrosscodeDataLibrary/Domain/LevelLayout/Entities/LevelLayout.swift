@@ -81,10 +81,9 @@ extension LevelLayout {
         try container.encodeIfPresent(letterMap?.toJSON(), forKey: .letterMap)
     }
 
-    public static var api: LevelsAPI { get {
-        @Injected(\.layoutsAPI) var api
-        return api
-    }}
-        
-
+    
+//    static var api: LevelsAPI { get {
+    public static func getApi() -> APIType {
+        return .layoutsAPI
+    }
 }
