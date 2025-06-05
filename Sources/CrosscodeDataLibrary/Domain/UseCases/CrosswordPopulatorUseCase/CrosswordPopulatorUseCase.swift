@@ -64,7 +64,6 @@ class CrosswordPopulator {
         }
         
         if Task.isCancelled {
-            print("Cancelled in populateCrossword")
             throw CancellationError()
         }
         

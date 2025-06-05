@@ -1,12 +1,12 @@
 import Foundation
 import Factory
 
-public protocol DeleteLayoutUseCase {
+public protocol DeleteLevelUseCase {
     func execute(id: UUID) async throws -> [any Level]
 }
 
 
-public final class DeleteLayoutUseCaseImpl: DeleteLayoutUseCase {
+public final class DeleteLevelUseCaseImpl: DeleteLevelUseCase {
     private let repository: LevelRepository
     
     // Dependency injected via Factory
@@ -22,7 +22,7 @@ public final class DeleteLayoutUseCaseImpl: DeleteLayoutUseCase {
 }
 
 
-final class MockDeleteLayoutUseCaseImpl: DeleteLayoutUseCase {
+final class MockDeleteLevelUseCaseImpl: DeleteLevelUseCase {
     var mockLevels: [any Level] = []
     var errorToThrow: Error?
     

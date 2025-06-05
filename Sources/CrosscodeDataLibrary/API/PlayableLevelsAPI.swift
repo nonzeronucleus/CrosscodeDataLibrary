@@ -2,7 +2,14 @@ import Factory
 //
 //typealias PopulationTask = Task<(String, String), Error>
 //
-public class PlayableLevelsAPIImpl:LevelsAPI{
+
+
+public protocol PlayableLevelsAPI : LevelsAPI {
+    func addNewLevel(layout:LevelLayout) async throws -> [any Level]
+
+}
+
+public class PlayableLevelsAPIImpl:PlayableLevelsAPI{
     
     public func printTest() {
         print("PlayableLevelsAPIImpl")

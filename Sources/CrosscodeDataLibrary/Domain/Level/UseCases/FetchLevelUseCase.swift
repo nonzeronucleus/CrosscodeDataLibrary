@@ -1,12 +1,12 @@
 import Foundation
 import Factory
 
-public protocol FetchLayoutUseCaseProtocol {
+public protocol FetchLevelUseCaseProtocol {
     func execute(id:UUID) async throws -> (any Level)?
 }
 
 
-public final class FetchLayoutUseCase: FetchLayoutUseCaseProtocol {
+public final class FetchLevelUseCase: FetchLevelUseCaseProtocol {
 //    private let repository: LayoutRepository
     private let repository: LevelRepository
 
@@ -29,7 +29,7 @@ public final class FetchLayoutUseCase: FetchLayoutUseCaseProtocol {
 //final class MockFetchLayoutUseCase: FetchLayoutUseCaseProtocol {
 //    var mockLevel: LevelLayout?
 //    var errorToThrow: Error?
-//    
+//
 //    func execute(id:UUID) async throws -> LevelLayout? {
 //        if let error = errorToThrow { throw error }
 //        guard let mockLevel = mockLevel else {

@@ -36,13 +36,13 @@ public class LayoutsAPIImpl : LayoutsAPI {
     
 //    public func fetchLayout(id:UUID) async throws -> LevelLayout? {
     public func fetchLevel(id:UUID) async throws -> (any Level)? {
-        let fetchLayoutUseCase: FetchLayoutUseCaseProtocol = Container.shared.fetchLayoutUseCase()
+        let fetchLayoutUseCase: FetchLevelUseCaseProtocol = Container.shared.fetchLayoutUseCase()
         return try await fetchLayoutUseCase.execute(id: id)
     }
 
     
     public func deleteLevel(id: UUID) async throws -> [any Level] {
-        let deleteLayoutUseCase: DeleteLayoutUseCase = Container.shared.deleteLayoutUseCase()
+        let deleteLayoutUseCase: DeleteLevelUseCase = Container.shared.deleteLayoutUseCase()
         return try await deleteLayoutUseCase.execute(id: id)
     }
     

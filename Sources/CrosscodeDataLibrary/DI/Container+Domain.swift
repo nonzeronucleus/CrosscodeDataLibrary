@@ -21,9 +21,9 @@ public extension Container {
     }
 
     
-    var fetchLayoutUseCase: Factory<FetchLayoutUseCaseProtocol> {
+    var fetchLayoutUseCase: Factory<FetchLevelUseCaseProtocol> {
         Factory(self) {
-            FetchLayoutUseCase(
+            FetchLevelUseCase(
                 repository: self.layoutRepository()
             )
         }
@@ -39,9 +39,9 @@ public extension Container {
         }
     }
     
-    var deleteLayoutUseCase: Factory<DeleteLayoutUseCase> {
+    var deleteLayoutUseCase: Factory<DeleteLevelUseCase> {
         Factory(self) {
-            DeleteLayoutUseCaseImpl(
+            DeleteLevelUseCaseImpl(
                 repository: self.layoutRepository()
             )
         }
