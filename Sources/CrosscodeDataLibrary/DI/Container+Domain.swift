@@ -31,13 +31,21 @@ public extension Container {
 
     
     var addLayoutUsecase: Factory<AddLayoutUseCaseProtocol> {
-//        fatalError("\(#function) not implemented")
         Factory(self) {
             AddLayoutUseCase(
                 repository: self.layoutRepository()
             )
         }
     }
+    
+    internal var addPlayableLevelUsecase: Factory<AddPlayableLevelUseCase> {
+        Factory(self) {
+            AddPlayableLevelUseCaseImpl(
+                repository: self.playableLevelRepository()
+            )
+        }
+    }
+
     
     var deleteLayoutUseCase: Factory<DeleteLevelUseCase> {
         Factory(self) {

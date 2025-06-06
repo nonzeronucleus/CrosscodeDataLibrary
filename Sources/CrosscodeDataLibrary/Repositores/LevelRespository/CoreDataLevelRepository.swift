@@ -18,6 +18,7 @@ public protocol LevelRepository {
 
 
 
+
 class CoreDataLevelRepository<L: LevelMO>: LevelRepository {
     private let context: NSManagedObjectContext
     

@@ -62,28 +62,6 @@ public class LayoutsAPIImpl : LayoutsAPI {
 }
 
 
-//extension LayoutsAPIImpl {
-//    public func importLayouts() async throws {
-//        try await importLevels()
-//    }
-//    
-//    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
-//        return try await fetchLevel(id: id) as? LevelLayout
-//    }
-//    
-//    public func fetchAllLayouts() async throws -> [LevelLayout] {
-//        return try await fetchAllLevels() as? [LevelLayout] ?? []
-//    }
-//    
-//    public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
-//        return try await deleteLevel(id: id) as? [LevelLayout] ?? []
-//    }
-//    
-//    public func saveLayout(level: LevelLayout) async throws {
-//        try await saveLevel(level: level)
-//    }
-//}
-
 extension LayoutsAPIImpl {
     public func addNewLevel() async throws -> [any Level] {
         let addLayoutUseCase: AddLayoutUseCaseProtocol = Container.shared.addLayoutUsecase()

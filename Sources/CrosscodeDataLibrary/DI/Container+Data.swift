@@ -8,13 +8,15 @@ public extension Container {
     
     var layoutRepository: Factory<LevelRepository> {
         Factory(self) {
-            CoreDataLevelRepository<LayoutMO>(context: self.managedObjectContext())
+//            CoreDataLevelRepository<LayoutMO>
+            CoreDataLayoutRepository(context: self.managedObjectContext())
         }.singleton
     }
     
-    var playableLevelRepository: Factory<LevelRepository> {
+    var playableLevelRepository: Factory<PlayableLevelRepository> {
         Factory(self) {
-            CoreDataLevelRepository<PlayableLevelMO>(context: self.managedObjectContext())
+//            CoreDataLevelRepository<PlayableLevelMO>
+            CoreDataPlayableLevelRepositoryImpl(context: self.managedObjectContext())
         }.singleton
     }
     

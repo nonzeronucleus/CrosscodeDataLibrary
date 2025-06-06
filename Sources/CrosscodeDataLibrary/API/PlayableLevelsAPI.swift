@@ -5,7 +5,7 @@ import Factory
 
 
 public protocol PlayableLevelsAPI : LevelsAPI {
-    func addNewLevel(layout:LevelLayout) async throws -> [any Level]
+    func addNewLevel(layout:LevelLayout) async throws
 
 }
 
@@ -15,8 +15,13 @@ public class PlayableLevelsAPIImpl:PlayableLevelsAPI{
         print("PlayableLevelsAPIImpl")
     }
 
-    public func addNewLevel(layout:LevelLayout) async throws -> [any Level] {
-        fatalError("\(#function) not implemented")
+    public func addNewLevel(layout:LevelLayout) async throws {
+        let addPlayableLevelUseCase: AddPlayableLevelUseCase = Container.shared.addPlayableLevelUsecase()
+        
+        try await addPlayableLevelUseCase.execute(layout: layout)
+
+//        return [playableLevel]
+//        fatalError("\(#function) not implemented")
     }
     
     public func importLevels() async throws {

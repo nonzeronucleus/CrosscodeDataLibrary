@@ -2,8 +2,15 @@ import Foundation
 
 
 public protocol PlayableLevelRepository: LevelRepository {
-//    func create(level: PlayableLevel) throws
 }
+
+typealias CoreDataPlayableLevelRepositoryImpl = CoreDataLevelRepository<PlayableLevelMO>
+
+
+extension CoreDataPlayableLevelRepositoryImpl: PlayableLevelRepository {
+    
+}
+
 
 
 
