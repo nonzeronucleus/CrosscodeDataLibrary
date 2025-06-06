@@ -51,8 +51,10 @@ public struct PlayableLevel: Level, Identifiable, Equatable, Hashable, Sendable 
     
 
 
-    public init(layout: LevelLayout, attemptedLetters: [Character] = [], packId: UUID? = nil, isLocked: Bool = false) {
+    public init(layout: LevelLayout, id: UUID, number: Int, attemptedLetters: [Character] = [], packId: UUID? = nil, isLocked: Bool = false) {
         self.layout = layout
+        self.layout.id = id // Don't use the ID of the original layout
+        self.layout.number = number
         self.attemptedLetters = attemptedLetters
         self.packId = packId
         self.isLocked = isLocked

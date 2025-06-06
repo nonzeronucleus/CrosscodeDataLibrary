@@ -37,6 +37,6 @@ public class CoreDataStack {
     }
     
     func printLocation(description: NSPersistentStoreDescription) {
-        debugPrint("Core Data DB Location:", description.url?.absoluteString ?? "Unknown location")
+        print("Core Data DB Location:", description.url?.absoluteString ?? "Unknown location")
     }
 }
