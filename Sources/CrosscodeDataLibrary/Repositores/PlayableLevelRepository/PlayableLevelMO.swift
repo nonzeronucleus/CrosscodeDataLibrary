@@ -1,6 +1,6 @@
 import CoreData
 
-extension PlayableLevelMO: LevelMO {
+extension GameLevelMO: LevelMO {
     public func populate(from level: any Level) {
         guard let level = level as? GameLevel else {
             fatalError("Cannot populate \(Self.self) from \(type(of: level))")

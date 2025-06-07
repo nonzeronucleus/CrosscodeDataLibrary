@@ -4,7 +4,7 @@ import Foundation
 public protocol GameLevelRepository: LevelRepository {
 }
 
-typealias CoreDataGameLevelRepositoryImpl = CoreDataLevelRepository<PlayableLevelMO>
+typealias CoreDataGameLevelRepositoryImpl = CoreDataLevelRepository<GameLevelMO>
 
 
 extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
