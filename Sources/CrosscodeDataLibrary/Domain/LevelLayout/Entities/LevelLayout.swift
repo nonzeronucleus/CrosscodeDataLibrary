@@ -2,6 +2,8 @@ import Foundation
 import Factory
 
 public struct LevelLayout: Level, Identifiable, Equatable, Hashable, Sendable, Codable {
+    public var name: String { get { "Level \(number ?? 0)"}}
+    
     public var id: UUID
     public var number: Int?
     public var crossword: Crossword

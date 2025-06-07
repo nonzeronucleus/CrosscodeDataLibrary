@@ -8,13 +8,13 @@ public protocol LayoutsAPI: LevelsAPI {
     
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
 
-    func addNewLayout() async throws -> [LevelLayout]
+    func addNewLayout() async throws
 }
 
 
 public class LayoutsAPIImpl : LayoutsAPI {
-    public func addNewLayout() async throws -> [LevelLayout] {
-        return try await addNewLevel() as? [LevelLayout] ?? []
+    public func addNewLayout() async throws {
+        try await addNewLevel()
     }
     
 // Actor for async operations
@@ -63,9 +63,9 @@ public class LayoutsAPIImpl : LayoutsAPI {
 
 
 extension LayoutsAPIImpl {
-    public func addNewLevel() async throws -> [any Level] {
+    public func addNewLevel() async throws  {
         let addLayoutUseCase: AddLayoutUseCaseProtocol = Container.shared.addLayoutUsecase()
-        return try await addLayoutUseCase.execute()
+        try await addLayoutUseCase.execute()
     }
     
     public func populateCrossword(crosswordLayout: String) async throws -> (String, String) {

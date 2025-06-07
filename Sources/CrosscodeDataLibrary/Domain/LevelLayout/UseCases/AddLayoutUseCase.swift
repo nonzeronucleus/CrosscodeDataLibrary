@@ -2,7 +2,7 @@ import Foundation
 import Factory
 
 public protocol AddLayoutUseCaseProtocol {
-    func execute() async throws -> [any Level]
+    func execute() async throws
 }
 
 
@@ -14,7 +14,7 @@ class AddLayoutUseCase: AddLayoutUseCaseProtocol {
         self.repository = repository
     }
 
-    func execute() async throws -> [any Level] {
+    func execute() async throws {
         @Injected(\.uuid) var uuid
         let currentHighestNum = try await repository.getHighestLevelNumber()
         
@@ -29,7 +29,6 @@ class AddLayoutUseCase: AddLayoutUseCaseProtocol {
         )
         
         try repository.create(level: layout)
-        return try await repository.fetchAll()
     }
 }
 
