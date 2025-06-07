@@ -7,9 +7,9 @@ public extension Container {
         }.singleton
     }
     
-    var playableLevelsAPI: Factory<LevelsAPI> {
+    var gameLevelsAPI: Factory<LevelsAPI> {
         Factory(self) {
-            PlayableLevelsAPIImpl()
+            GameLevelsAPIImpl()
         }.singleton
     }
 

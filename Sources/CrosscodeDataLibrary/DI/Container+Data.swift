@@ -12,9 +12,9 @@ public extension Container {
         }.singleton
     }
     
-    var playableLevelRepository: Factory<PlayableLevelRepository> {
+    var gameLevelRepository: Factory<GameLevelRepository> {
         Factory(self) {
-            CoreDataPlayableLevelRepositoryImpl(context: self.managedObjectContext())
+            CoreDataGameLevelRepositoryImpl(context: self.managedObjectContext())
         }.singleton
     }
     

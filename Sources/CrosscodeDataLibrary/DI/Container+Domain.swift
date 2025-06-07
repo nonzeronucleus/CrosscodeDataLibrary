@@ -12,10 +12,10 @@ public extension Container {
         }
     }
     
-    var fetchAllPlayableLevelssUseCase: Factory<FetchAllLevelsUseCaseProtocol> {
+    var fetchAllGameLevelssUseCase: Factory<FetchAllLevelsUseCaseProtocol> {
         Factory(self) {
             FetchAllLevelsUseCase(
-                repository: self.playableLevelRepository()
+                repository: self.gameLevelRepository()
             )
         }
     }
@@ -38,10 +38,10 @@ public extension Container {
         }
     }
     
-    internal var addPlayableLevelUsecase: Factory<AddPlayableLevelUseCase> {
+    internal var addGameLevelUsecase: Factory<AddGameLevelUseCase> {
         Factory(self) {
-            AddPlayableLevelUseCaseImpl(
-                repository: self.playableLevelRepository()
+            AddGameLevelUseCaseImpl(
+                repository: self.gameLevelRepository()
             )
         }
     }
@@ -57,7 +57,7 @@ public extension Container {
     
     var saveLevelUseCase: Factory<SaveLevelUseCase> {
         Factory(self) { @MainActor in
-            SaveLevelLayoutUseCaseImpl(
+            SaveLayoutUseCaseImpl(
                 repository: self.layoutRepository(),
                 debounceTime: 500_000_000 // 0.5s debounce
             )
@@ -78,11 +78,11 @@ public extension Container {
         }
     }
     
-    // Mark: - PlayableLevels
+    // Mark: - GameLevel
     
-//    internal var addPlayableLevelUseCase: Factory<AddPlayableLevelUseCase> {
+//    internal var addGameLevelUseCase: Factory<AddGameLevelUseCase> {
 //        Factory(self) {
-//            AddPlayableLevelUseCaseImpl()
+//            AddGameLevelUseCaseImpl()
 //        }
 //    }
     

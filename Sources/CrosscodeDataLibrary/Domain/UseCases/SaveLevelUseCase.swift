@@ -3,7 +3,7 @@ import Factory
 import Combine
 
 @MainActor  // Ensures CoreData operations run on the main thread
-final class SaveLevelLayoutUseCaseImpl: SaveLevelUseCase {
+final class SaveLayoutUseCaseImpl: SaveLevelUseCase {
 //    private let repository: LayoutRepository
     private let repository: LevelRepository
     private var saveTask: Task<Void, Error>?
@@ -19,7 +19,7 @@ final class SaveLevelLayoutUseCaseImpl: SaveLevelUseCase {
     }
 
     func execute(level: any Level) async throws {
-        guard let layout = level as? LevelLayout else {
+        guard let layout = level as? Layout else {
             fatalError("Invalid level type provided")
         }
         

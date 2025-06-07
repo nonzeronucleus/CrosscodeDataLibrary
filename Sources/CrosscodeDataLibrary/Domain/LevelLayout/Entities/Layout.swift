@@ -1,7 +1,7 @@
 import Foundation
 import Factory
 
-public struct LevelLayout: Level, Identifiable, Equatable, Hashable, Sendable, Codable {
+public struct Layout: Level, Identifiable, Equatable, Hashable, Sendable, Codable {
     public var name: String { get { "Level \(number ?? 0)"}}
     
     public var id: UUID
@@ -31,7 +31,7 @@ public struct LevelLayout: Level, Identifiable, Equatable, Hashable, Sendable, C
 
 
     public var gridText: String? {
-        LevelLayout.transformedValue(crossword)
+        Layout.transformedValue(crossword)
     }
     
     static func transformedValue(_ value: Any?) -> String? {
@@ -53,7 +53,7 @@ public struct LevelLayout: Level, Identifiable, Equatable, Hashable, Sendable, C
     }
 }
 
-extension LevelLayout {
+extension Layout {
     private enum CodingKeys: String, CodingKey {
         case id, number, crossword, letterMap
     }

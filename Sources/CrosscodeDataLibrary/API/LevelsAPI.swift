@@ -1,6 +1,6 @@
 public enum APIType {
     case layoutsAPI
-    case playableLevelsAPI
+    case gameLevelsAPI
 }
 
 

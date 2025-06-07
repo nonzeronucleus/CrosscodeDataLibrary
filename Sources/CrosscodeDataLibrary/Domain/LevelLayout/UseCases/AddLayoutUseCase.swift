@@ -22,7 +22,7 @@ class AddLayoutUseCase: AddLayoutUseCaseProtocol {
         let crossword = Crossword(rows: 15, columns: 15)
         
 
-        let layout = LevelLayout(
+        let layout = Layout(
             id: id,
             number: currentHighestNum+1,
             gridText: crossword.layoutString()

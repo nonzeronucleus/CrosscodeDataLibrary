@@ -4,24 +4,21 @@ import Factory
 //
 
 
-public protocol PlayableLevelsAPI : LevelsAPI {
-    func addNewLevel(layout:LevelLayout) async throws
+public protocol GameLevelsAPI : LevelsAPI {
+    func addNewLevel(layout:Layout) async throws
 
 }
 
-public class PlayableLevelsAPIImpl:PlayableLevelsAPI{
+public class GameLevelsAPIImpl:GameLevelsAPI{
     
     public func printTest() {
-        print("PlayableLevelsAPIImpl")
+        print("GameLevelsAPIImpl")
     }
 
-    public func addNewLevel(layout:LevelLayout) async throws {
-        let addPlayableLevelUseCase: AddPlayableLevelUseCase = Container.shared.addPlayableLevelUsecase()
+    public func addNewLevel(layout:Layout) async throws {
+        let addGameLevelUseCase: AddGameLevelUseCase = Container.shared.addGameLevelUsecase()
         
-        try await addPlayableLevelUseCase.execute(layout: layout)
-
-//        return [playableLevel]
-//        fatalError("\(#function) not implemented")
+        try await addGameLevelUseCase.execute(layout: layout)
     }
     
     public func importLevels() async throws {
@@ -33,7 +30,7 @@ public class PlayableLevelsAPIImpl:PlayableLevelsAPI{
     }
     
     public func fetchAllLevels() async throws -> [any Level] {
-        let fetchAllUseCase = Container.shared.fetchAllPlayableLevelssUseCase()
+        let fetchAllUseCase = Container.shared.fetchAllGameLevelssUseCase()
         return try await fetchAllUseCase.execute()
     }
     
@@ -58,9 +55,9 @@ public class PlayableLevelsAPIImpl:PlayableLevelsAPI{
     required public init() {
     }
     
-    public func addNewLevel(layout:LevelLayout) async throws -> PlayableLevel {
+    public func addNewLevel(layout:Layout) async throws -> GameLevel {
         fatalError("\(#function) not implemented")
-//        let addNewLevelUseCase: AddPlayableLevelUseCase = Container.shared.addPlayableLevelUseCase()
+//        let addNewLevelUseCase: AddGameLevelUseCase = Container.shared.addGameLevelUseCase()
 //        return try addNewLevelUseCase.execute(layout: layout)
 
     }

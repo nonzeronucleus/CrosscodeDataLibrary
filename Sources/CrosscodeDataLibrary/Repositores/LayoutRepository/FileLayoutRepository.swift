@@ -5,7 +5,7 @@ struct FileLayoutRepository : LayoutRepository {
     
     let resourceFile = ResourceFileStorage(fileName: "Layouts.json")
     
-    func create(level: LevelLayout) throws {
+    func create(level: Layout) throws {
         fatalError("\(#function) not implemented")
     }
     
@@ -37,7 +37,7 @@ extension FileLayoutRepository {
         
         do {
             let jsonData = try Data(contentsOf: resourceFile.url)
-            let levelDefs = try decoder.decode([LevelLayout].self, from: jsonData)
+            let levelDefs = try decoder.decode([Layout].self, from: jsonData)
             
             return levelDefs
         }

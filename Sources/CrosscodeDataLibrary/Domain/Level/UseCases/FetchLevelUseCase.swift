@@ -7,12 +7,10 @@ public protocol FetchLevelUseCaseProtocol {
 
 
 public final class FetchLevelUseCase: FetchLevelUseCaseProtocol {
-//    private let repository: LayoutRepository
     private let repository: LevelRepository
 
     // Dependency injected via Factory
     public init(repository: LevelRepository) {
-//        public init(repository: LayoutRepository) {
         self.repository = repository
     }
     
@@ -27,10 +25,10 @@ public final class FetchLevelUseCase: FetchLevelUseCaseProtocol {
 
 //
 //final class MockFetchLayoutUseCase: FetchLayoutUseCaseProtocol {
-//    var mockLevel: LevelLayout?
+//    var mockLevel: Layout?
 //    var errorToThrow: Error?
 //
-//    func execute(id:UUID) async throws -> LevelLayout? {
+//    func execute(id:UUID) async throws -> Layout? {
 //        if let error = errorToThrow { throw error }
 //        guard let mockLevel = mockLevel else {
 //            fatalError("\(#function) not implemented")

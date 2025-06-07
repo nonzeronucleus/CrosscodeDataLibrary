@@ -1,9 +1,9 @@
 import Foundation
 import Factory
 
-public struct PlayableLevel: Level, Identifiable, Equatable, Hashable, Sendable {
+public struct GameLevel: Level, Identifiable, Equatable, Hashable, Sendable {
     public var id: UUID { layout.id }
-    public var layout: LevelLayout
+    public var layout: Layout
     public var crossword: Crossword {
         get { layout.crossword }
         set { layout.crossword = newValue}
@@ -37,7 +37,7 @@ public struct PlayableLevel: Level, Identifiable, Equatable, Hashable, Sendable 
         letterMap: String? = nil,
         attemptedLetters: String? = nil
     ) {
-        self.layout = LevelLayout(id: id, number: number, gridText: gridText, letterMap: letterMap)
+        self.layout = Layout(id: id, number: number, gridText: gridText, letterMap: letterMap)
         
         self.packId = packId
         self.isLocked = false
@@ -51,7 +51,7 @@ public struct PlayableLevel: Level, Identifiable, Equatable, Hashable, Sendable 
     
 
 
-    public init(layout: LevelLayout, id: UUID, number: Int, attemptedLetters: [Character] = [], packId: UUID? = nil, isLocked: Bool = false) {
+    public init(layout: Layout, id: UUID, number: Int, attemptedLetters: [Character] = [], packId: UUID? = nil, isLocked: Bool = false) {
         self.layout = layout
         self.layout.id = id // Don't use the ID of the original layout
         self.layout.number = number
@@ -126,7 +126,7 @@ public struct PlayableLevel: Level, Identifiable, Equatable, Hashable, Sendable 
     }
 }
 
-extension PlayableLevel: Codable {
+extension GameLevel: Codable {
     private enum CodingKeys: String, CodingKey {
         case layout, attemptedLetters, packId, isLocked
     }
@@ -141,7 +141,7 @@ extension PlayableLevel: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        layout = try container.decode(LevelLayout.self, forKey: .layout)
+        layout = try container.decode(Layout.self, forKey: .layout)
         let attemptedLettersString = try container.decode(String.self, forKey: .attemptedLetters)
         attemptedLetters = Array(attemptedLettersString)
         packId = try container.decodeIfPresent(UUID.self, forKey: .packId)
@@ -150,7 +150,7 @@ extension PlayableLevel: Codable {
     
 //    public static var api: LevelsAPI { get {
     public static func getApi() -> APIType {
-        return .playableLevelsAPI
+        return .gameLevelsAPI
     }
 
 }

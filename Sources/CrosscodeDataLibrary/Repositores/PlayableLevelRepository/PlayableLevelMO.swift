@@ -2,7 +2,7 @@ import CoreData
 
 extension PlayableLevelMO: LevelMO {
     public func populate(from level: any Level) {
-        guard let level = level as? PlayableLevel else {
+        guard let level = level as? GameLevel else {
             fatalError("Cannot populate \(Self.self) from \(type(of: level))")
         }
         self.id = level.id
@@ -18,7 +18,7 @@ extension PlayableLevelMO: LevelMO {
             fatalError("Missing id for LevelMO number \(self.number)")
         }
         
-        return PlayableLevel(id: id,
+        return GameLevel(id: id,
                      number: Int(self.number),
                      packId: self.packId,
                      gridText: self.gridText,
@@ -26,7 +26,7 @@ extension PlayableLevelMO: LevelMO {
                      attemptedLetters: self.attemptedLetters) //,
     }
     
-    func populate(from level: PlayableLevel) {
+    func populate(from level: GameLevel) {
         self.id = level.id
         self.number = Int64(level.number ?? 0)
         self.packId = level.packId
@@ -36,12 +36,12 @@ extension PlayableLevelMO: LevelMO {
 //        self.numCorrectLetters = Int16(level.numCorrectLetters)
     }
     
-    func toLevel() -> PlayableLevel {
+    func toLevel() -> GameLevel {
         guard let id = self.id else {
             fatalError("Missing id for LevelMO number \(self.number)")
         }
         
-        return PlayableLevel(id: id,
+        return GameLevel(id: id,
                      number: Int(self.number),
                      packId: self.packId,
                      gridText: self.gridText,

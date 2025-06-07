@@ -4,7 +4,7 @@ import Testing
 class MockLayoutRepository: LayoutRepository {
     func create(level: any Level) throws {
         if let createError { throw createError }
-        storedLayouts[level.id] = level as? LevelLayout
+        storedLayouts[level.id] = level as? Layout
     }
     
     func save(level: any Level) throws {
@@ -12,7 +12,7 @@ class MockLayoutRepository: LayoutRepository {
     }
     
     
-    func save(level: LevelLayout) throws {
+    func save(level: Layout) throws {
         fatalError("\(#function) not implemented")
     }
     
@@ -24,11 +24,10 @@ class MockLayoutRepository: LayoutRepository {
         fatalError("\(#function) not implemented")
     }
     
-    var storedLayouts = [UUID: LevelLayout]()
+    var storedLayouts = [UUID: Layout]()
     var fetchError: Error?
     var createError: Error?
     
-//    func fetchAll() async throws -> [LevelLayout] {
     func fetchAll() async throws -> [any Level] {
 
         if let fetchError { throw fetchError }
@@ -40,7 +39,7 @@ class MockLayoutRepository: LayoutRepository {
         return storedLayouts[id]
     }
     
-    func create(level: LevelLayout) throws {
+    func create(level: Layout) throws {
         if let createError { throw createError }
         storedLayouts[level.id] = level
     }
@@ -48,13 +47,13 @@ class MockLayoutRepository: LayoutRepository {
 
 // MARK: - Test Data
 
-extension LevelLayout {
+extension Layout {
     static func mock(
         id: UUID = UUID(),
         number: Int? = 1,
         gridText: String? = "...|...|...|"
-    ) -> LevelLayout {
-        LevelLayout(
+    ) -> Layout {
+        Layout(
             id: id,
             number: number,
             gridText: gridText,
@@ -82,8 +81,8 @@ class ImportLayoutsUseCaseTests {
     @Test 
     func importNewLayouts_successfullyImports() async throws {
         // Given
-        let layout1 = LevelLayout.mock(id: UUID(), number: 1)
-        let layout2 = LevelLayout.mock(id: UUID(), number: 2)
+        let layout1 = Layout.mock(id: UUID(), number: 1)
+        let layout2 = Layout.mock(id: UUID(), number: 2)
         mockFileRepository.storedLayouts = [
             layout1.id: layout1,
             layout2.id: layout2
@@ -102,8 +101,8 @@ class ImportLayoutsUseCaseTests {
     func importSkipsExistingLayouts() async throws {
         // Initialize mock repositories
         // Given
-        let existingLayout = LevelLayout.mock(id: UUID(), number: 1)
-        let newLayout = LevelLayout.mock(id: UUID(), number: 2)
+        let existingLayout = Layout.mock(id: UUID(), number: 1)
+        let newLayout = Layout.mock(id: UUID(), number: 2)
         
         mockMainRepository.storedLayouts = [existingLayout.id: existingLayout]
         
@@ -135,8 +134,8 @@ class ImportLayoutsUseCaseTests {
     @Test
     func importContinuesAfterSingleCreateFailure() async {
         // Arrange
-        let goodLayout = LevelLayout.mock(id: UUID(), number: 1)
-        let badLayout = LevelLayout.mock(id: UUID(), number: 2)
+        let goodLayout = Layout.mock(id: UUID(), number: 1)
+        let badLayout = Layout.mock(id: UUID(), number: 2)
         
         mockFileRepository.storedLayouts = [
             goodLayout.id: goodLayout,

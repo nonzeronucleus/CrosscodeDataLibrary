@@ -17,14 +17,12 @@ public class LayoutsAPIImpl : LayoutsAPI {
         try await addNewLevel()
     }
     
-// Actor for async operations
     private let actor = CrosscodeAPIActor()
     
     required public init() {
     }
     
     public func importLevels() async throws {
-//        fatalError("\(#function) not implemented")
         let importUseCase = Container.shared.importLayoutsUseCase()
         try await importUseCase.execute()
     }
@@ -34,7 +32,6 @@ public class LayoutsAPIImpl : LayoutsAPI {
         return try await fetchAllUseCase.execute()
     }
     
-//    public func fetchLayout(id:UUID) async throws -> LevelLayout? {
     public func fetchLevel(id:UUID) async throws -> (any Level)? {
         let fetchLayoutUseCase: FetchLevelUseCaseProtocol = Container.shared.fetchLayoutUseCase()
         return try await fetchLayoutUseCase.execute(id: id)
