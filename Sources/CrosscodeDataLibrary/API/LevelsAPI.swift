@@ -11,7 +11,7 @@ public protocol LevelsAPI {
 
     func fetchAllLevels() async throws -> [any Level]
 
-    func deleteLevel(id: UUID) async throws -> [any Level]
+    func deleteLevel(id: UUID) async throws
     
     func saveLevel(level: any Level) async throws
 

@@ -38,9 +38,9 @@ public class LayoutsAPIImpl : LayoutsAPI {
     }
 
     
-    public func deleteLevel(id: UUID) async throws -> [any Level] {
+    public func deleteLevel(id: UUID) async throws {
         let deleteLayoutUseCase: DeleteLevelUseCase = Container.shared.deleteLayoutUseCase()
-        return try await deleteLayoutUseCase.execute(id: id)
+        try await deleteLayoutUseCase.execute(id: id)
     }
     
     public func saveLevel(level: any Level) async throws {

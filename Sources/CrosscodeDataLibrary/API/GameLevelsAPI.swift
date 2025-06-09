@@ -34,7 +34,7 @@ public class GameLevelsAPIImpl:GameLevelsAPI{
         return try await fetchAllUseCase.execute()
     }
     
-    public func deleteLevel(id: UUID) async throws -> [any Level] {
+    public func deleteLevel(id: UUID) async throws {
         fatalError("\(#function) not implemented")
     }
     
