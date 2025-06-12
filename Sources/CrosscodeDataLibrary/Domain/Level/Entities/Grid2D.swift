@@ -8,7 +8,8 @@ public protocol Grid2DItem: Hashable, Codable, Sendable {
 
 public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable, Sendable {
     public static func == (lhs: Grid2D<Element>, rhs: Grid2D<Element>) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id &&
+            zip(lhs.elements, rhs.elements).allSatisfy({ zip($0, $1).allSatisfy({ $0 == $1 }) })
     }
     
     private(set) var id: UUID
