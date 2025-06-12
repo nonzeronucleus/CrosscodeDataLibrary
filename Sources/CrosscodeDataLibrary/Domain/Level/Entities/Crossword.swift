@@ -1,10 +1,10 @@
 public typealias Crossword = Grid2D<Cell>
 
 public extension Crossword {
-    func encode(to encoder: any Encoder) throws {
-        
-    }
-    
+//    func encode(to encoder: any Encoder) throws {
+//        
+//    }
+//    
     init(rows: Int, columns: Int) {
         self.init(rows: rows, columns: columns, elementGenerator: { row, col in Cell(pos: Pos(row: row, column: col)) })
     }
@@ -68,6 +68,7 @@ public extension Crossword {
         }
     }
 }
+
 
 
 

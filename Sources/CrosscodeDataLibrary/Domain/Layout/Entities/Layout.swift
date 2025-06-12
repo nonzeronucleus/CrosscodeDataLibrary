@@ -89,3 +89,12 @@ extension Layout {
         return .layoutsAPI
     }
 }
+
+extension Layout {
+    public func withUpdatedCrossword(_ crossword: Crossword) -> Layout {
+        var newLayout = self
+        newLayout.crossword = crossword
+        return newLayout
+    }
+}
+

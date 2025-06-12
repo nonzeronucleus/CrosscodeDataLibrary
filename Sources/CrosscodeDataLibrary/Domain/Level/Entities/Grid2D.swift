@@ -161,3 +161,13 @@ extension Grid2D {
         }.joined(separator: "\n")
     }
 }
+
+
+extension Crossword {
+    public mutating func mutateElements(_ transform: (inout [[Cell]]) -> Void) {
+        var elements = self.elements // Assuming you have elements access
+        transform(&elements)
+        self.elements = elements
+    }
+}
+
