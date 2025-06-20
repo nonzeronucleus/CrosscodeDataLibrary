@@ -6,12 +6,15 @@ public struct Cell: Equatable, Identifiable, Hashable, Codable, Grid2DItem, Send
     let pos: Pos
     public var letter:Character?
     
-    init(pos:Pos, letter:Character? = nil) {
-        @Injected(\.uuid) var uuid
-        
-        self.id = uuid()
+    init(id: UUID, pos:Pos, letter:Character? = nil) {
+        self.id = id
         self.letter = letter
         self.pos = pos
+    }
+
+    init(pos:Pos, letter:Character? = nil) {
+        @Injected(\.uuid) var uuid
+        self.init(id: uuid(), pos: pos, letter: letter)
     }
     
     // Create cell based on a config, where the "." character represents a nil char

@@ -2,13 +2,13 @@ import Foundation
 
 
 @dynamicCallable
-public protocol UUIDGenerator {
+public protocol UUIDGen {
     func dynamicallyCall(withArguments args: [Any]) -> UUID
     func uuidGenerator() -> UUID
 
 }
 
-extension UUIDGenerator {
+extension UUIDGen {
     // Default implementation that ignores arguments
     public func dynamicallyCall(withArguments args: [Any]) -> UUID {
         uuidGenerator()
@@ -21,14 +21,14 @@ extension UUIDGenerator {
 }
 
 
-public struct RandomUUIDProvider: UUIDGenerator {
+public struct RandomUUIDProvider: UUIDGen {
     // Implementation stays the same
     public func uuidGenerator() -> UUID {
         UUID()
     }
 }
 
-public final class IncrementingUUIDProvider: UUIDGenerator {
+public final class IncrementingUUIDProvider: UUIDGen {
     private var counter = 0
     private let lock = NSLock()
     

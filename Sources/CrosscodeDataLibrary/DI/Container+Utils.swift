@@ -3,7 +3,7 @@ import Foundation
 
 extension Container {
     
-    public var uuid: Factory<UUIDGenerator> {
+    public var uuid: Factory<UUIDGen> {
         self { RandomUUIDProvider() }
             .singleton
     }
