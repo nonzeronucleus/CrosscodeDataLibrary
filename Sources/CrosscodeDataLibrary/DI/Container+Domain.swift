@@ -86,6 +86,15 @@ public extension Container {
 //        }
 //    }
     
+    var fetchGameLevelUseCase: Factory<FetchLevelUseCaseProtocol> {
+        Factory(self) {
+            FetchLevelUseCase(
+                repository: self.gameLevelRepository()
+            )
+        }
+    }
+
+    
     internal var importLayoutsUseCase: Factory<ImportLevelsUseCase> {
         Factory(self) {
             ImportLevelsUseCaseImpl(repository: self.layoutRepository(), fileRepository: self.importLayoutRepository())

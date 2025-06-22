@@ -18,6 +18,10 @@ extension GameLevelMO: LevelMO {
             fatalError("Missing id for LevelMO number \(self.number)")
         }
         
+        if self.attemptedLetters == nil || self.attemptedLetters!.count < 26 {
+            self.attemptedLetters = String(repeating: " ", count: 26)
+        }
+        
         return GameLevel(id: id,
                      number: Int(self.number),
                      packId: self.packId,
@@ -39,6 +43,10 @@ extension GameLevelMO: LevelMO {
     func toLevel() -> GameLevel {
         guard let id = self.id else {
             fatalError("Missing id for LevelMO number \(self.number)")
+        }
+        
+        if attemptedLetters == nil || attemptedLetters!.count < 26 {
+            attemptedLetters = String(repeating: " ", count: 26)
         }
         
         return GameLevel(id: id,

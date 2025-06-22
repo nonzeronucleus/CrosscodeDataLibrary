@@ -25,8 +25,9 @@ public class GameLevelsAPIImpl:GameLevelsAPI{
         fatalError("\(#function) not implemented")
     }
     
-    public func fetchLevel(id: UUID) async throws -> (any Level)? {
-        fatalError("\(#function) not implemented")
+    public func fetchLevel(id:UUID) async throws -> (any Level)? {
+        let fetchGameLevelUseCase: FetchLevelUseCaseProtocol = Container.shared.fetchGameLevelUseCase()
+        return try await fetchGameLevelUseCase.execute(id: id)
     }
     
     public func fetchAllLevels() async throws -> [any Level] {
