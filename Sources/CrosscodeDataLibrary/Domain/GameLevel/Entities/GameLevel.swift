@@ -34,7 +34,7 @@ public struct GameLevel: Level, Identifiable, Equatable, Hashable, Sendable {
         number: Int?,
         packId: UUID?,
         gridText: String? = nil,
-        letterMap: String? = nil,
+        letterMap: String? = nil,   // Array of letters to match number on grid, with 0 offset (e.g. first character in the array is the one numbered 1 on the grid)
         attemptedLetters: String? = nil
     ) {
         self.layout = Layout(id: id, number: number, gridText: gridText, letterMap: letterMap)

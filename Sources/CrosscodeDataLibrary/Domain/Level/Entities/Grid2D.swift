@@ -81,7 +81,7 @@ public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable, S
         }
     }
     
-    func findElement(byID id: Element.ID) -> Element? {
+    public func findElement(byID id: Element.ID) -> Element? {
         for row in elements {
             if let element = row.first(where: { $0.id == id }) {
                 return element
