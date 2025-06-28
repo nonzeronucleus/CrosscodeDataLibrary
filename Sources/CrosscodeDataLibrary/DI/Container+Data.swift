@@ -18,9 +18,15 @@ public extension Container {
         }.singleton
     }
     
-    var importLayoutRepository: Factory<LayoutRepository> {
+    internal var layoutExportFileRepository: Factory<FileRepository> {
         Factory(self) {
-            FileLayoutRepository()
+            DocumentFileRepository(fileName: "layout.json")
         }.singleton
     }
+    
+//    var importLayoutRepository: Factory<LayoutRepository> {
+//        Factory(self) {
+//            FileLayoutRepository()
+//        }.singleton
+//    }
 }

@@ -9,6 +9,8 @@ public protocol LayoutsAPI: LevelsAPI {
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
 
     func addNewLayout() async throws
+    func exportLayouts(layouts:[Layout]) async throws
+
 }
 
 
@@ -22,9 +24,15 @@ public class LayoutsAPIImpl : LayoutsAPI {
     required public init() {
     }
     
+    public func exportLayouts(layouts:[Layout]) async throws {
+        let exportLayoutsUseCase = Container.shared.exportLayoutUseCase()
+        try await exportLayoutsUseCase.execute(layouts: layouts)
+    }
+
+    
     public func importLevels() async throws {
-        let importUseCase = Container.shared.importLayoutsUseCase()
-        try await importUseCase.execute()
+//        let importUseCase = Container.shared.importLayoutsUseCase()
+//        try await importUseCase.execute()
     }
 
     public func fetchAllLevels() async throws -> [any Level] {
