@@ -20,18 +20,28 @@ public extension Container {
     
     internal var layoutExportFileRepository: Factory<FileRepository> {
         Factory(self) {
-            DocumentFileRepository(fileName: "layout.json")
+            DocumentFileRepository(fileName: "layout")
         }.singleton
     }
     
     internal var layoutImportFileRepository: Factory<FileRepository> {
         Factory(self) {
-            ResourceFileRepository(fileName: "layout.json")
-//            DocumentFileRepository(fileName: "layout.json")
+            ResourceFileRepository(fileName: "layout")
         }.singleton
     }
 
+    internal var gameLevelExportFileRepository: Factory<FileRepository> {
+        Factory(self) {
+            DocumentFileRepository(fileName: "level")
+        }.singleton
+    }
     
+    internal var gameLevelImportFileRepository: Factory<FileRepository> {
+        Factory(self) {
+            ResourceFileRepository(fileName: "level")
+        }.singleton
+    }
+
 //    var importLayoutRepository: Factory<LayoutRepository> {
 //        Factory(self) {
 //            FileLayoutRepository()

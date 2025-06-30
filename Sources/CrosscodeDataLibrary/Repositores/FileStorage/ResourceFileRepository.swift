@@ -12,10 +12,14 @@ struct ResourceFileRepository: FileRepository {
             fatalError("Can't find resource bundle")
         }
         
-        return url!.appendingPathComponent(fileName)
+        return url!.appendingPathComponent(fileName+".json")
     }
     
     func exists() -> Bool {
         return FileManager.default.fileExists(atPath: url.path)
+    }
+    
+    func read() throws -> Data {
+        try Data(contentsOf: url)
     }
 }

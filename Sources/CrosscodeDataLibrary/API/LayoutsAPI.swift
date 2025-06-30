@@ -11,7 +11,7 @@ public protocol LayoutsAPI: LevelsAPI {
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
 
     func addNewLayout() async throws
-    func exportLayouts(layouts:[Layout]) async throws
+    func exportLayouts() async throws
 
 }
 
@@ -26,9 +26,9 @@ public class LayoutsAPIImpl : LayoutsAPI {
     required public init() {
     }
     
-    public func exportLayouts(layouts:[Layout]) async throws {
+    public func exportLayouts() async throws {
         let exportLayoutsUseCase = Container.shared.exportLayoutUseCase()
-        try await exportLayoutsUseCase.execute(layouts: layouts)
+        try await exportLayoutsUseCase.execute()
     }
 
     

@@ -6,4 +6,6 @@ protocol FileRepository {
     }
     
     func exists() -> Bool
+    
+    func read() throws -> Data
 }

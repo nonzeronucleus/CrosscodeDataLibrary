@@ -2,14 +2,16 @@ import Foundation
 import Factory
 
 public protocol ExportLayoutsUseCase {
-    func execute(layouts:[Layout]) async throws
+    func execute() async throws
 }
 
 struct ExportLayoutsUseCaseImpl: ExportLayoutsUseCase {
-    let repository: FileRepository
-    func execute(layouts:[Layout]) async throws {
-//        debugPrint("Exporting to \(repository.url)")
+    let layoutRepository: LayoutRepository
+    let fileRepository: FileRepository
+
+    func execute() async throws {
+        let layouts = try await layoutRepository.fetchAll() as! [Layout]
         let jsonData = try JSONEncoder().encode(layouts)
-        try jsonData.write(to: repository.url)
+        try jsonData.write(to: fileRepository.url)
     }
 }

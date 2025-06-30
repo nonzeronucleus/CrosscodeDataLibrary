@@ -96,11 +96,30 @@ public extension Container {
     
     var exportLayoutUseCase: Factory<ExportLayoutsUseCase> {
         Factory(self) {
-            ExportLayoutsUseCaseImpl(repository: self.layoutExportFileRepository())
+            ExportLayoutsUseCaseImpl(
+                layoutRepository: self.layoutRepository(),
+                fileRepository: self.layoutExportFileRepository())
         }
     }
 
     var importLayoutsUseCase: Factory<ImportLayoutsUseCase> {
+        Factory(self) {
+            ImportLayoutsUseCaseImpl(
+                fileRespositories: [self.layoutImportFileRepository(), self.layoutExportFileRepository()],
+                layoutRepository: self.layoutRepository()
+            )
+        }
+    }
+    
+    var exportGameLevelsUseCase: Factory<ExportGameLevelsUseCase> {
+        Factory(self) {
+            ExportGameLevelsUseCaseImpl(
+                levelRepository: self.gameLevelRepository(),
+                fileRepository: self.gameLevelExportFileRepository())
+        }
+    }
+
+    var importGameLevelsUseCase: Factory<ImportLayoutsUseCase> {
         Factory(self) {
             ImportLayoutsUseCaseImpl(
                 fileRespositories: [self.layoutImportFileRepository(), self.layoutExportFileRepository()],

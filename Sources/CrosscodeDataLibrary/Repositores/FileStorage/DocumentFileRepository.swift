@@ -13,7 +13,7 @@ struct DocumentFileRepository:FileRepository {
                                                                 in: .userDomainMask,
                                                                 appropriateFor: nil,
                                                                 create: false)
-            return url.appendingPathComponent(fileName)
+            return url.appendingPathComponent(fileName+".json")
         }
         catch {
             fatalError(error.localizedDescription)
@@ -22,5 +22,9 @@ struct DocumentFileRepository:FileRepository {
     
     func exists() -> Bool {
         return FileManager.default.fileExists(atPath: url.path)
+    }
+    
+    func read() throws -> Data {
+        try Data(contentsOf: url)
     }
 }
