@@ -23,10 +23,4 @@ struct DocumentFileRepository:FileRepository {
     func exists() -> Bool {
         return FileManager.default.fileExists(atPath: url.path)
     }
-    
-    func export(layouts:[Layout]) async throws {
-        layouts.forEach { layout in
-            debugPrint("\(layout.id)")
-        }
-    }
 }

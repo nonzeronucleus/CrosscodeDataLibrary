@@ -5,7 +5,7 @@ public enum APIType {
 
 
 public protocol LevelsAPI {
-    func importLevels() async throws
+//    func importLevels() async throws
     
     func fetchLevel(id:UUID) async throws -> (any Level)?
 

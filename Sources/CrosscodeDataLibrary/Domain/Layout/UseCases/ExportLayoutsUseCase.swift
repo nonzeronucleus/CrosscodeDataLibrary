@@ -4,36 +4,12 @@ import Factory
 public protocol ExportLayoutsUseCase {
     func execute(layouts:[Layout]) async throws
 }
-//
-//
+
 struct ExportLayoutsUseCaseImpl: ExportLayoutsUseCase {
     let repository: FileRepository
-//
-//    // Dependency injected via Factory
-//    public init(repository: FileStore) {
-//        self.repository = repository
-//    }
-//
     func execute(layouts:[Layout]) async throws {
-        for layout in layouts {
-            debugPrint(layout.id.uuidString)
-        }
+//        debugPrint("Exporting to \(repository.url)")
+        let jsonData = try JSONEncoder().encode(layouts)
+        try jsonData.write(to: repository.url)
     }
-//
-////        @Injected(\.uuid) var uuid
-////        let currentHighestNum = try await repository.getHighestLevelNumber()
-////        
-////        let id = uuid.uuidGenerator()
-////        let crossword = Crossword(rows: 15, columns: 15)
-////        
-////
-////        let layout = Layout(
-////            id: id,
-////            number: currentHighestNum+1,
-////            gridText: crossword.layoutString()
-////        )
-////        
-////        try repository.create(level: layout)
-//    }
 }
-//

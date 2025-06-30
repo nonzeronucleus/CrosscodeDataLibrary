@@ -100,11 +100,12 @@ public extension Container {
         }
     }
 
-    
-//    internal var importLayoutsUseCase: Factory<ImportLevelsUseCase> {
-//        Factory(self) {
-//            ImportLevelsUseCaseImpl(repository: self.layoutRepository(), fileRepository: self.importLayoutRepository())
-//        }
-//    }
-
+    var importLayoutsUseCase: Factory<ImportLayoutsUseCase> {
+        Factory(self) {
+            ImportLayoutsUseCaseImpl(
+                fileRespositories: [self.layoutImportFileRepository(), self.layoutExportFileRepository()],
+                layoutRepository: self.layoutRepository()
+            )
+        }
+    }
 }

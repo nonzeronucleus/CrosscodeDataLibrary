@@ -6,7 +6,7 @@ public extension Container {
         Factory(self) { CoreDataStack.shared.viewContext }
     }
     
-    var layoutRepository: Factory<LevelRepository> {
+    var layoutRepository: Factory<LayoutRepository> {
         Factory(self) {
             CoreDataLayoutRepository(context: self.managedObjectContext())
         }.singleton
@@ -23,6 +23,14 @@ public extension Container {
             DocumentFileRepository(fileName: "layout.json")
         }.singleton
     }
+    
+    internal var layoutImportFileRepository: Factory<FileRepository> {
+        Factory(self) {
+            ResourceFileRepository(fileName: "layout.json")
+//            DocumentFileRepository(fileName: "layout.json")
+        }.singleton
+    }
+
     
 //    var importLayoutRepository: Factory<LayoutRepository> {
 //        Factory(self) {

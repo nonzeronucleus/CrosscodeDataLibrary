@@ -4,6 +4,8 @@ typealias PopulationTask = Task<(String, String), Error>
 
 
 public protocol LayoutsAPI: LevelsAPI {
+    func importLayouts() async throws -> [Layout]
+
     func populateCrossword(crosswordLayout: String) async throws -> (String, String)
     
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
@@ -30,9 +32,9 @@ public class LayoutsAPIImpl : LayoutsAPI {
     }
 
     
-    public func importLevels() async throws {
-//        let importUseCase = Container.shared.importLayoutsUseCase()
-//        try await importUseCase.execute()
+    public func importLayouts() async throws -> [Layout]{
+        let importUseCase = Container.shared.importLayoutsUseCase()
+        return try await importUseCase.execute()
     }
 
     public func fetchAllLevels() async throws -> [any Level] {
