@@ -8,7 +8,8 @@ public protocol GameLevelsAPI : LevelsAPI {
     func addNewLevel(layout:Layout) async throws
     func exportGameLevels() async throws
     func importGameLevels() async throws -> [GameLevel]
-
+    func fetchAllPacks() async throws -> [Pack]
+    func addPack() async throws -> Pack
 }
 
 public class GameLevelsAPIImpl:GameLevelsAPI{
@@ -58,7 +59,31 @@ public class GameLevelsAPIImpl:GameLevelsAPI{
         //        let addNewLevelUseCase: AddGameLevelUseCase = Container.shared.addGameLevelUseCase()
         //        return try addNewLevelUseCase.execute(layout: layout)
     }
+    
+    public func fetchAllPacks() async throws -> [Pack] {
+        let fetchAllPacksUseCase: FetchAllPacksUseCase = Container.shared.fetchAllPacksUseCase()
+        
+        var packs = try await fetchAllPacksUseCase.execute()
+        
+        if packs.isEmpty {
+            let newPack = try await addPack()
+            packs.append(newPack)
+        }
+        
+        return packs
+    }
+    
+    public func addPack() async throws -> Pack {
+        let addPackUseCase: AddPackUseCase = Container.shared.addPackUseCase()
+        return try await addPackUseCase.execute()
+    }
+
+    
     public func printTest() {
         print("GameLevelsAPIImpl")
     }
+    
+//    public func getPacks() async throws -> [Pack] {
+//        return Con
+//    }
 }

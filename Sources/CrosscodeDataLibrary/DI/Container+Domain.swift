@@ -127,4 +127,21 @@ public extension Container {
             )
         }
     }
+    
+    internal var fetchAllPacksUseCase: Factory<FetchAllPacksUseCase> {
+        Factory(self) {
+            FetchAllPacksUseCaseImpl(
+                repository: self.gameLevelRepository()
+            )
+        }
+    }
+    
+    internal var addPackUseCase: Factory<AddPackUseCase> {
+        Factory(self) {
+            AddPackUseCaseImpl(
+                repository: self.gameLevelRepository()
+            )
+        }
+    }
+
 }

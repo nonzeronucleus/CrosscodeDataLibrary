@@ -20,7 +20,7 @@ public protocol LevelRepository {
 
 
 class CoreDataLevelRepository<L: LevelMO>: LevelRepository {
-    private let context: NSManagedObjectContext
+    let context: NSManagedObjectContext
     
     // Injected via Factory
     public init(context: NSManagedObjectContext = Container.shared.managedObjectContext()) {
@@ -73,8 +73,6 @@ class CoreDataLevelRepository<L: LevelMO>: LevelRepository {
     
     public func fetchAll() async throws -> [any Level] {
         let fetchRequest: NSFetchRequest = L.fetchRequest()
-        
-        
 
         guard let results = try context.fetch(fetchRequest) as? [L] else {
             fatalError("Failed to fetch LevelMO")
