@@ -19,6 +19,15 @@ public extension Container {
             )
         }
     }
+    
+    
+    var fetchGameLevelssUseCase: Factory<FetchGameLevelsUseCase> {
+        Factory(self) {
+            FetchGameLevelsUseCaseImpl(
+                repository: self.gameLevelRepository()
+            )
+        }
+    }
 
     
     var fetchLayoutUseCase: Factory<FetchLevelUseCaseProtocol> {

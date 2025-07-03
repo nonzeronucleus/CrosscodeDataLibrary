@@ -5,11 +5,13 @@ import Factory
 
 
 public protocol GameLevelsAPI : LevelsAPI {
+    func fetchGameLevels(packId:UUID) async throws -> [GameLevel]
     func addNewLevel(layout:Layout) async throws
     func exportGameLevels() async throws
     func importGameLevels() async throws -> [GameLevel]
     func fetchAllPacks() async throws -> [Pack]
     func addPack() async throws -> Pack
+    
 }
 
 public class GameLevelsAPIImpl:GameLevelsAPI{
@@ -41,6 +43,13 @@ public class GameLevelsAPIImpl:GameLevelsAPI{
         let fetchAllUseCase = Container.shared.fetchAllGameLevelssUseCase()
         return try await fetchAllUseCase.execute()
     }
+    
+    
+    public func fetchGameLevels(packId:UUID) async throws -> [GameLevel] {
+        let fetchGameLevelslUseCase = Container.shared.fetchGameLevelssUseCase()
+        return try await fetchGameLevelslUseCase.execute(packId: packId)
+    }
+
     
     public func deleteLevel(id: UUID) async throws {
         fatalError("\(#function) not implemented")

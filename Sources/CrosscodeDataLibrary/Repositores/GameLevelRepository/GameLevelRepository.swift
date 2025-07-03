@@ -2,6 +2,7 @@ import Foundation
 
 
 public protocol GameLevelRepository: LevelRepository {
+    func fetchtGameLevels(packId: UUID) throws -> [GameLevel]
     func createPack() throws -> Pack
 
     func getPacks() throws -> [Pack]
@@ -11,11 +12,17 @@ typealias CoreDataGameLevelRepositoryImpl = CoreDataLevelRepository<GameLevelMO>
 
 
 extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
+    func fetchtGameLevels(packId: UUID) throws -> [GameLevel] {
+        let fetchRequest: NSFetchRequest = L.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "packId == %@", packId as CVarArg)
 
-//    func addPack() throws -> Pack {
-//        let packMO = PackMO(context: context)
-//    }
-//    
+        let results = try context.fetch(fetchRequest)
+        
+        debugPrint("Loaded \(results.count)")
+        
+        return results.map { $0.toLevel() }
+    }
+    
     
     public func createPack() throws -> Pack{
         // 1. Get the current max number
