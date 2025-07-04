@@ -145,12 +145,12 @@ public extension Container {
         }
     }
     
-    internal var addPackUseCase: Factory<AddPackUseCase> {
-        Factory(self) {
-            AddPackUseCaseImpl(
-                repository: self.gameLevelRepository()
-            )
-        }
-    }
+//    internal var addPackUseCase: Factory<AddPackUseCase> {
+//        Factory(self) {
+//            AddPackUseCaseImpl(
+//                repository: self.gameLevelRepository()
+//            )
+//        }
+//    }
 
 }

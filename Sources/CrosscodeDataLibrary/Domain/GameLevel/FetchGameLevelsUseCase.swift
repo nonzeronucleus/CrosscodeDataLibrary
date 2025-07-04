@@ -14,7 +14,9 @@ public final class FetchGameLevelsUseCaseImpl: FetchGameLevelsUseCase {
     }
     
     public func execute(packId: UUID) async throws -> [GameLevel] {
-        try repository.fetchtGameLevels(packId: packId)
+//        try repository.establishRelationships()
+//        try repository.findOrCreateAvailablePack()
+        return try repository.fetchtGameLevels(packId: packId)
     }
 }
 

@@ -14,9 +14,14 @@ struct AddGameLevelUseCaseImpl: AddGameLevelUseCase {
 
     func execute(layout: Layout) async throws {
         @Injected(\.uuid) var uuid
+//        let 
+        
+//        let pack = findOrCreateAvailablePack() throws /*-> PackMO*/ {
+
         let currentHighestNum = try await repository.getHighestLevelNumber()
         let gameLevel = GameLevel(layout: layout, id: uuid(), number: currentHighestNum + 1)
                 
-        try repository.create(level: gameLevel)
+//        try repository.create(level: gameLevel)
+        try repository.createGameLevel(level: gameLevel)
     }
 }

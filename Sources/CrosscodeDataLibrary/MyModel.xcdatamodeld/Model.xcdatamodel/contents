@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="GameLevelMO" representedClassName="GameLevelMO" syncable="YES" codeGenerationType="class">
         <attribute name="attemptedLetters" optional="YES" attributeType="String"/>
         <attribute name="gridText" optional="YES" attributeType="String"/>
@@ -8,6 +8,7 @@
         <attribute name="number" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="numCorrectLetters" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="packId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="owningPack" maxCount="1" deletionRule="Nullify" destinationEntity="PackMO" inverseName="gameLevels" inverseEntity="PackMO"/>
     </entity>
     <entity name="LayoutMO" representedClassName="LayoutMO" syncable="YES" codeGenerationType="class">
         <attribute name="gridText" optional="YES" attributeType="String"/>
@@ -18,5 +19,6 @@
     <entity name="PackMO" representedClassName="PackMO" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="number" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="gameLevels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameLevelMO" inverseName="owningPack" inverseEntity="GameLevelMO"/>
     </entity>
 </model>
