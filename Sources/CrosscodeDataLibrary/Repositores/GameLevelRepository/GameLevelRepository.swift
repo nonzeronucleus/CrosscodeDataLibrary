@@ -2,17 +2,15 @@ import Foundation
 
 
 public protocol GameLevelRepository: LevelRepository {
-   func createGameLevel(level: any Level) throws
-
+    func findOrCreateAvailablePack() throws -> Pack
     
-//    func getNumLevelsInPack(packId: UUID) throws -> Int
+    func createGameLevel(level: any Level) throws
     func establishRelationships() throws
-
-//    func findOrCreateAvailablePack() throws /*-> PackMO*/
-
+    func getHighestLevelNumber(for pack:Pack) async throws -> Int
+    
     func fetchtGameLevels(packId: UUID) throws -> [GameLevel]
-//    func createPack() throws -> Pack
-
+    //    func createPack() throws -> Pack
+    
     func getPacks() throws -> [Pack]
 }
 
@@ -20,54 +18,37 @@ typealias CoreDataGameLevelRepositoryImpl = CoreDataLevelRepository<GameLevelMO>
 
 
 extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
-//    func getNumLevelsInPack(packId: UUID) throws -> Int {
-//        let fetchRequest: NSFetchRequest = L.fetchRequest()
-//        fetchRequest.predicate = NSPredicate(format: "packId == %@", packId as CVarArg)
-//
-//        let results = try context.fetch(fetchRequest)
-//        
-//        return results.count
-//    }
-    
-    
-//    func findOrCreateAvailablePack(in context: NSManagedObjectContext) throws -> PackMO {
-//        // 1. Fetch all packs with their level counts
-//        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "PackMO")
-//        fetchRequest.propertiesToFetch = ["id", "number"]
-//        fetchRequest.resultType = .dictionaryResultType
-//        
-//        // Create an expression to count levels per pack
-//        let expressionDesc = NSExpressionDescription()
-//        expressionDesc.name = "levelCount"
-//        expressionDesc.expression = NSExpression(
-//            forFunction: "count:",
-//            arguments: [NSExpression(forKeyPath: "gameLevels")] // Assuming your relationship is named "gameLevels"
-//        )
-//        expressionDesc.expressionResultType = .integer32AttributeType
-//        
-//        fetchRequest.propertiesToGroupBy = ["id", "number"]
-//        fetchRequest.propertiesToFetch = ["id", "number", expressionDesc]
-//        
-//        // 2. Execute fetch and find first pack with <25 levels
-//        if let results = try context.fetch(fetchRequest) as? [[String: Any]] {
-//            for result in results.sorted(by: { ($0["number"] as? Int16 ?? 0) < ($1["number"] as? Int16 ?? 0) }) {
-//                if let levelCount = result["levelCount"] as? Int, levelCount < 25 {
-//                    let packId = result["id"] as! UUID
-//                    let pack = try context.existingObject(with: packId) as! PackMO
-//                    return pack
-//                }
-//            }
-//        }
-//        
-//        // 3. If no available pack found, create a new one
-//        let newPack = PackMO(context: context)
-//        newPack.id = UUID()
-//        newPack.number = try PackMO.getNextPackNumber(in: context)
-//        try context.save()
-//        
-//        return newPack
-//    }
-//
+
+    func getHighestLevelNumber(for pack:Pack) async throws -> Int {
+        let request: NSFetchRequest<NSDictionary> = NSFetchRequest(entityName: "GameLevelMO")
+        
+        // Filter for this pack
+        request.predicate = NSPredicate(format: "packId == %@", pack.id as CVarArg)
+        
+        // Set up max calculation
+        let expression = NSExpression(forKeyPath: "number")
+        let maxExpression = NSExpression(forFunction: "max:", arguments: [expression])
+        
+        let expressionDesc = NSExpressionDescription()
+        expressionDesc.name = "maxLevelNumber"
+        expressionDesc.expression = maxExpression
+        expressionDesc.expressionResultType = .integer64AttributeType
+        
+        request.propertiesToFetch = [expressionDesc]
+        request.resultType = .dictionaryResultType
+        
+        if let result = try context.fetch(request).first {
+            debugPrint(result)
+        }
+
+        
+        guard let result = try context.fetch(request).first,
+              let maxNumber = result["maxLevelNumber"] as? Int64 else {
+            return 0
+        }
+        
+        return Int(maxNumber)
+    }
     
     
     func establishRelationships() throws {
@@ -102,19 +83,23 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
         try context.save()
     }
     
+    
+    func findOrCreateAvailablePack() throws -> Pack {
+        return try findOrCreateAvailablePackMO().toPack()
+    }
+
   
-    func findOrCreateAvailablePack() throws -> PackMO {
-        // 1. Create fetch request with count
+    func findOrCreateAvailablePackMO() throws -> PackMO {
+        let maxLevelsInPack = 5
+
         let fetchRequest: NSFetchRequest<PackMO> = PackMO.fetchRequest()
         fetchRequest.propertiesToFetch = ["id", "number"]
         fetchRequest.relationshipKeyPathsForPrefetching = ["gameLevels"]
         
-        // 2. Fetch all packs with their levels
         let allPacks = try context.fetch(fetchRequest)
         
-        // 3. Find first pack with <25 levels (sorted by pack number)
         if let availablePack = allPacks.sorted(by: { $0.number < $1.number })
-                                       .first(where: { $0.gameLevels?.count ?? 0 < 5 }) {
+                                       .first(where: { $0.gameLevels?.count ?? 0 < maxLevelsInPack }) {
             
             debugPrint("Found \(availablePack.number) pack with \(availablePack.gameLevels?.count ?? 0) levels")
             
@@ -122,19 +107,9 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
             return availablePack
         }
         debugPrint(">>> No available pack found")
-        // 4. If none found, create new pack
-        
-//        let newPack = PackMO(context: context)
-//        newPack.id = UUID()
-//        newPack.number = try PackMO.getNextPackNumber(in: context)
-//        try context.save()
-        
+
         return try createPackMO()
     }
-    
-//    func getNextPackNumber() throws -> Int {
-//        
-//    }
     
     func fetchtGameLevels(packId: UUID) throws -> [GameLevel] {
         let fetchRequest: NSFetchRequest = L.fetchRequest()
@@ -150,7 +125,6 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
     
     
     private func createPackMO() throws -> PackMO{
-        debugPrint("CreatePackMO")
         // 1. Get the current max number
         let fetchRequest: NSFetchRequest<PackMO> = PackMO.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "number", ascending: false)]
@@ -158,28 +132,18 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
         
         let maxNumberPack = try context.fetch(fetchRequest).first
         let nextNumber = (maxNumberPack?.number ?? 0) + 1
-        debugPrint("nextNumber \(nextNumber)")
         
-        // 2. Create new PackMO
         let newPack = PackMO(context: context)
         newPack.id = UUID()
         newPack.number = Int16(nextNumber)
-        debugPrint("Pack Id \(String(describing: newPack.id))")
-        
-        debugPrint("Saved")
-        
+
+        try context.save()
         
         return newPack
     }
-
-//    public func createPack() throws -> Pack {
-//        return try createPackMO().toPack()
-//    }
-//    
-//    
-//    
+    
     public func createGameLevel(level: any Level) throws {
-        let packMO = try findOrCreateAvailablePack()
+        let packMO = try findOrCreateAvailablePackMO()
         
         let entity = GameLevelMO(context: context)
         debugPrint("PackMO: \(String(describing: packMO.id))")
