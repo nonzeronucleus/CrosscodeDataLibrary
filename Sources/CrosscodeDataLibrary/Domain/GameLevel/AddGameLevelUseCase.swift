@@ -18,9 +18,8 @@ struct AddGameLevelUseCaseImpl: AddGameLevelUseCase {
         let pack = try repository.findOrCreateAvailablePack()
         let currentHighestNum = try await repository.getHighestLevelNumber(for: pack)
         
-//        let currentHighestNum = try await repository.getHighestLevelNumber()
         let gameLevel = GameLevel(layout: layout, id: uuid(), number: currentHighestNum + 1)
                 
-        try repository.createGameLevel(level: gameLevel)
+        try repository.createGameLevel(level: gameLevel, pack: pack)
     }
 }

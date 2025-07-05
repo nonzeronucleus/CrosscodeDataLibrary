@@ -4,13 +4,11 @@ import Foundation
 public protocol GameLevelRepository: LevelRepository {
     func findOrCreateAvailablePack() throws -> Pack
     
-    func createGameLevel(level: any Level) throws
+    func createGameLevel(level: any Level, pack:Pack) throws
     func establishRelationships() throws
     func getHighestLevelNumber(for pack:Pack) async throws -> Int
     
     func fetchtGameLevels(packId: UUID) throws -> [GameLevel]
-    //    func createPack() throws -> Pack
-    
     func getPacks() throws -> [Pack]
 }
 
@@ -100,14 +98,8 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
         
         if let availablePack = allPacks.sorted(by: { $0.number < $1.number })
                                        .first(where: { $0.gameLevels?.count ?? 0 < maxLevelsInPack }) {
-            
-            debugPrint("Found \(availablePack.number) pack with \(availablePack.gameLevels?.count ?? 0) levels")
-            
-
             return availablePack
         }
-        debugPrint(">>> No available pack found")
-
         return try createPackMO()
     }
     
@@ -142,16 +134,16 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
         return newPack
     }
     
-    public func createGameLevel(level: any Level) throws {
-        let packMO = try findOrCreateAvailablePackMO()
+    public func createGameLevel(level: any Level, pack:Pack) throws {
+        let packMO = try getPackMO(packId: pack.id)
+//        let packMO = try findOrCreateAvailablePackMO()
         
         let entity = GameLevelMO(context: context)
-        debugPrint("PackMO: \(String(describing: packMO.id))")
         
         entity.owningPack = packMO
         
         entity.populate(from: level)
-        entity.packId = packMO.id
+        entity.packId = pack.id
         try CoreDataStack.shared.saveContext()
     }
         
@@ -169,7 +161,7 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
         return results.map { $0.toPack() }
     }
     
-    func getPack(packId: UUID) throws -> PackMO? {
+    func getPackMO(packId: UUID) throws -> PackMO? {
         let fetchRequest: NSFetchRequest<PackMO> = PackMO.fetchRequest()
 
         fetchRequest.predicate = NSPredicate(format: "id == %@", packId as CVarArg)
