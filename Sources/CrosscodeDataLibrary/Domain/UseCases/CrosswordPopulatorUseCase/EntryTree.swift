@@ -14,6 +14,7 @@ class EntryTree {
     
     func increaseCount() {
         count += 1
+//        debugPrint(count)
     }
     
     func addChildren(parent: EntryNode) {

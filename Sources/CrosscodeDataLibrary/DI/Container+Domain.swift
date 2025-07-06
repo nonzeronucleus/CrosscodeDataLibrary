@@ -77,7 +77,7 @@ public extension Container {
     
     internal var populateCrosswordUseCase: Factory<CrosswordPopulatorUseCaseProtocol> {
         Factory(self) {
-            CrosswordPopulatorUseCase()
+            CrosswordPopulatorUseCase2()
         }
     }
     

@@ -89,8 +89,17 @@ class CrosswordPopulator {
         var attempts = 0
         var childrenPopulated = false
         let mask = getWord(entry: node.entry)
+//        debugPrint("Trying to populate node: \(node.entry)")
         
         while !childrenPopulated && !Task.isCancelled {
+//            if let index = entries.firstIndex(of: node.entry) {
+//                print("Found at index: \(index)")
+//            }
+//            node.entry.attemptCount += 1
+//            if node.entry.attemptCount > 100 {
+//                debugPrint("Bailing out due to high count: \(node.entry.attemptCount)")
+//                return false
+//            }
             node.increaseCount()
             
             if node.getCount() > 100 {
@@ -136,6 +145,7 @@ class CrosswordPopulator {
                 
                 if !childrenPopulated {
                     setWord(entry: node.entry, word: mask)
+//                    debugPrint("Attempts exceeded \(attempts)")
                     if attempts > 2 {
                         return false
                     }
@@ -147,7 +157,7 @@ class CrosswordPopulator {
             
             await Task.yield()
         }
-        
+//        debugPrint("Failed to populate node")
         return childrenPopulated
     }
     
