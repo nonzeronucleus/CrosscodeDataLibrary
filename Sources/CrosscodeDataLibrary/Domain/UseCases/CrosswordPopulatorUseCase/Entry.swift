@@ -6,7 +6,7 @@ class Entry:InstanceEquatable, CustomStringConvertible {
     private(set) var length: Int
     private(set) var direction: Direction
     private(set) var linkedEntries: [Entry] = []
-//    var attemptCount = 0
+    var attemptCount = 0
     var word:String?
     
 //    static func == (lhs: Entry, rhs: Entry) -> Bool {

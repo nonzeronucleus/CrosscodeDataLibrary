@@ -14,7 +14,7 @@ extension Array where Element: Equatable {
 
 
 
-class CrosswordPopulatorUseCase2: CrosswordPopulatorUseCaseProtocol {
+class CrosswordPopulatorUseCase: CrosswordPopulatorUseCaseProtocol {
     private var currentTask: PopulationTask?
     
     func execute(task: PopulationTask?, crosswordLayout: String) async throws -> (String, String) {
@@ -25,7 +25,7 @@ class CrosswordPopulatorUseCase2: CrosswordPopulatorUseCaseProtocol {
         currentTask = task
         let initCrossword = Crossword(initString: crosswordLayout)
         
-        let crosswordPopulator = CrosswordPopulator2(crossword: initCrossword)
+        var crosswordPopulator = CrosswordPopulator(crossword: initCrossword)
         
         let (finalCrossword, charIntMap) = try await crosswordPopulator.populateCrossword(currentTask: task)
         
