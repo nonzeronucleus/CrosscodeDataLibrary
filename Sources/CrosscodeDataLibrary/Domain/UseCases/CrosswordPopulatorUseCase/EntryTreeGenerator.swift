@@ -9,6 +9,13 @@ class EntryTreeGenerator {
     
     
     func generateRoot() -> Entry {
+        for e in acrossEntries {
+            e.reset()
+        }
+        for e in downEntries {
+            e.reset()
+        }
+
         let rootEntry = self.downEntries.randomElement()
         guard let rootEntry else {
             fatalError("\(#function) not implemented")
@@ -47,7 +54,6 @@ class EntryTreeGenerator {
                 }
             }
         }
-        
         return entry
     }
 }

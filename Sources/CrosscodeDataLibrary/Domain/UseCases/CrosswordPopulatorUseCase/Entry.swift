@@ -31,6 +31,10 @@ class Entry:InstanceEquatable, CustomStringConvertible {
         length += 1
     }
     
+    func reset() {
+        linkedEntries = []
+    }
+    
     var description: String {
         var str = "Entry: startPos: \(startPos), length: \(length), direction: \(direction)"
         
@@ -70,6 +74,16 @@ class Entry:InstanceEquatable, CustomStringConvertible {
             
         // Check for overlap
         return (horizStart.column...horizStart.column+horiz.length-1).contains(vertStart.column) && (vertStart.row...vertStart.row+vert.length-1).contains(horizStart.row)
+    }
+    
+    func debug(tab:Int = 0) {
+        let spaced = String(repeating: "--", count: tab*2)
+        
+        debugPrint("\(id) \(spaced)\(depth)")
+        
+        for linkedEntry in linkedEntries {
+            linkedEntry.debug(tab: tab + 1)
+        }
     }
 }
 

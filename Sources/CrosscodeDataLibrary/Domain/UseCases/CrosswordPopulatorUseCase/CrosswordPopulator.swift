@@ -6,9 +6,12 @@ struct CrosswordPopulator{
     var alphabetByFrequency = "JQZXFVWBKHMYPCUGILNORSTADE"
     var lettersToFind:[Character] = []
     var failedMasks:[String] = []
+    var totalAttempts:Int = 0
+    let initCrossword:Crossword
 
     init(crossword: Crossword) {
         self.crossword = crossword
+        self.initCrossword = crossword
         self.acrossEntries = crossword.findEntries(direction: .across)
         self.downEntries = crossword.findEntries(direction: .down)
     }
@@ -16,24 +19,40 @@ struct CrosswordPopulator{
     mutating func populateCrossword(currentTask: PopulationTask?) async throws -> (crossword: Crossword, characterIntMap: CharacterIntMap) {
         var populated = false
         var attempts = 0
+        let maxAttempts = 10
+        totalAttempts = 0
         
         resetLettersToFind()
         
-        while !populated && attempts < 5 {
+        while !populated && attempts < maxAttempts {
             let entryTreeGenerator = EntryTreeGenerator(acrossEntries: acrossEntries, downEntries: downEntries)
             let rootEntry = entryTreeGenerator.generateRoot()
 
-            populated = try await populateEntry(rootEntry)
-            
-            if populated {
-                upateLettersWithFoundWords()
+
+            do {
+                crossword = initCrossword
+                totalAttempts = 0
+                populated = try await populateEntry(rootEntry)
                 
-                if lettersToFind.count > 0 {
-                    populated = false
+                if populated {
+                    upateLettersWithFoundWords()
+                    
+                    if lettersToFind.count > 0 {
+                        debugPrint("Letters founc \(lettersToFind)")
+                        populated = false
+                    }
                 }
             }
+            catch PopulationError.tooManyTotalAttempts {
+                populated = false
+            }
+
             
             attempts += 1
+        }
+        
+        if attempts >= maxAttempts {
+            throw PopulationError.failedToPopulate(reason: "Had \(attempts) attempts")
         }
 
         return (crossword: crossword, characterIntMap: CharacterIntMap(shuffle: true))
@@ -44,6 +63,13 @@ struct CrosswordPopulator{
         entry.attemptCount = 0
 
         while !allPopulated {
+            totalAttempts += 1
+            
+            if totalAttempts > 10000 {
+                throw PopulationError.tooManyTotalAttempts(attempts: totalAttempts)
+            }
+
+
             let currentCrossword = crossword
             let mask = crossword.getWord(entry: entry)
             
@@ -78,6 +104,7 @@ struct CrosswordPopulator{
                 crossword = currentCrossword
 
                 failedMasks.append(mask)
+                
                 
                 return false
             }
@@ -130,5 +157,35 @@ struct CrosswordPopulator{
         if let index = lettersToFind.firstIndex(of: letter) {
             lettersToFind.remove(at: index)
         }
+    }
+}
+
+public enum PopulationError: Error, CustomStringConvertible, LocalizedError {
+    case tooManyTotalAttempts(attempts: Int)  // Fixed typo in parameter name
+    case failedToPopulate(reason: String)
+    
+    public var description: String {
+        switch self {
+        case .tooManyTotalAttempts(let attempts):
+            return "Population failed after \(attempts) attempts"
+        case .failedToPopulate(let reason):
+            return "Population failed: \(reason)"
+        }
+    }
+    
+    // LocalizedError conformance for better UIKit/SwiftUI integration
+    public var errorDescription: String? {
+        return description
+    }
+    
+    public var failureReason: String? {
+        switch self {
+        case .tooManyTotalAttempts: return "Maximum attempt limit reached"
+        case .failedToPopulate: return "Population algorithm failed"
+        }
+    }
+    
+    public var recoverySuggestion: String? {
+        return "Please try again with different parameters"
     }
 }
