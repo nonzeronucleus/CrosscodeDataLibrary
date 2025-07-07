@@ -19,7 +19,7 @@ struct CrosswordPopulator{
         var populated = false
         var attempts = 0
         
-        while !populated && attempts < 10 {
+        while !populated && attempts < 1 {
             populated = try await populateEntry(rootEntry)
             attempts += 1
         }
@@ -32,6 +32,7 @@ struct CrosswordPopulator{
         entry.attemptCount = 0
 
         while !allPopulated {
+            let currentCrossword = crossword
             let mask = crossword.getWord(entry: entry)
 
             var wordsByLength = wordlist.getWordsByLength(length: mask.count)
@@ -44,6 +45,8 @@ struct CrosswordPopulator{
             }
 
             guard let word = matchingWords.randomElement() else {
+                crossword = currentCrossword
+
                 return false
             }
 
@@ -62,14 +65,10 @@ struct CrosswordPopulator{
                 allPopulated = true
             }
             else {
-                crossword.setWord(entry: entry, word: mask)
-
-                if  mask == word {
-                    return false
-                }
+                crossword = currentCrossword
                 entry.attemptCount += 1
                 if entry.attemptCount >= 3 {
-                    
+                    crossword = currentCrossword
                     return false
                 }
             }

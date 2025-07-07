@@ -30,12 +30,6 @@ class CrosswordPopulatorUseCase: CrosswordPopulatorUseCaseProtocol {
         let (finalCrossword, charIntMap) = try await crosswordPopulator.populateCrossword(currentTask: task)
         
         return (finalCrossword.layoutString(), charIntMap.toJSON())
-        
-        
-//        let crosswordPopulator = CrosswordPopulator(crossword: initCrossword)
-//        let (finalCrossword, charIntMap) = try await crosswordPopulator.populateCrossword(currentTask: task)
-//        return (finalCrossword.layoutString(), charIntMap.toJSON())
-        //        return try await currentTask!.value
     }
     
     func cancel() {
