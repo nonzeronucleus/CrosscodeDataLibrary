@@ -10,7 +10,9 @@ class EntryTreeGenerator {
     
     func generateRoot() -> Entry {
         let rootEntry = self.downEntries.randomElement()
-        guard let rootEntry else { fatalError("\(#function) not implemented") }
+        guard let rootEntry else {
+            fatalError("\(#function) not implemented")
+        }
         
         downEntries.remove(rootEntry)
         

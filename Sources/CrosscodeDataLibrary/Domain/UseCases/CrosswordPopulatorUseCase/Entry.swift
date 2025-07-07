@@ -7,7 +7,8 @@ class Entry:InstanceEquatable, CustomStringConvertible {
     private(set) var direction: Direction
     private(set) var linkedEntries: [Entry] = []
     var depth = 0
-    var attemptCount = 0
+    var attemptCount = 0 
+
     var word:String?
     
 //    static func == (lhs: Entry, rhs: Entry) -> Bool {
