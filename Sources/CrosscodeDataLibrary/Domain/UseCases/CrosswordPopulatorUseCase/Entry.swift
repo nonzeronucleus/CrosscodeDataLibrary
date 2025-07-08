@@ -17,16 +17,16 @@ class Entry:InstanceEquatable, CustomStringConvertible {
 //    
     
     
-    init (startPos:Pos, length:Int, direction:Direction) {
+    init (startPos:Pos, length:Int = 1, direction:Direction) {
         self.startPos = startPos
         self.length = length
         self.direction = direction
     }
     
-    convenience init(startPos:Pos, direction:Direction) {
-        self.init(startPos:startPos, length:1, direction:direction)
-    }
-    
+//    convenience init(startPos:Pos, direction:Direction) {
+//        self.init(startPos:startPos, length:1, direction:direction)
+//    }
+//    
     func increaseLength() {
         length += 1
     }

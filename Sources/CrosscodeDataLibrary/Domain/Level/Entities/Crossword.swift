@@ -142,6 +142,18 @@ public extension Crossword {
             self[entry.startPos.row + iter.0 * i, entry.startPos.column + iter.1 * i].letter = char
         }
     }
+    
+    func getUsedLetters() -> [Character]{
+        var letters:Set<Character> = []
+        for cell in listElements() {
+            if let letter = cell.letter {
+                letters.insert(letter)
+//                removeLetter(letter: cell.letter!)
+            }
+        }
+        
+        return letters.sorted(by: <)
+    }
 }
 
 

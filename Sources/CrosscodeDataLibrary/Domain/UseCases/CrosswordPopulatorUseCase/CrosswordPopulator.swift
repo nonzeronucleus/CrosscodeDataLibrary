@@ -8,6 +8,7 @@ struct CrosswordPopulator{
     var failedMasks:[String] = []
     var totalAttempts:Int = 0
     let initCrossword:Crossword
+    var usedWords: [String] = []
 
     init(crossword: Crossword) {
         self.crossword = crossword
@@ -32,13 +33,13 @@ struct CrosswordPopulator{
             do {
                 crossword = initCrossword
                 totalAttempts = 0
+                usedWords = []
                 populated = try await populateEntry(rootEntry)
                 
                 if populated {
                     upateLettersWithFoundWords()
                     
                     if lettersToFind.count > 0 {
-                        debugPrint("Letters founc \(lettersToFind)")
                         populated = false
                     }
                 }
@@ -46,7 +47,6 @@ struct CrosswordPopulator{
             catch PopulationError.tooManyTotalAttempts {
                 populated = false
             }
-
             
             attempts += 1
         }
@@ -54,7 +54,7 @@ struct CrosswordPopulator{
         if attempts >= maxAttempts {
             throw PopulationError.failedToPopulate(reason: "Had \(attempts) attempts")
         }
-
+        
         return (crossword: crossword, characterIntMap: CharacterIntMap(shuffle: true))
     }
     
@@ -65,12 +65,13 @@ struct CrosswordPopulator{
         while !allPopulated {
             totalAttempts += 1
             
-            if totalAttempts > 10000 {
+            if totalAttempts > 1000 {
                 throw PopulationError.tooManyTotalAttempts(attempts: totalAttempts)
             }
 
 
             let currentCrossword = crossword
+            let currentUsedWords = usedWords
             let mask = crossword.getWord(entry: entry)
             
             if failedMasks.contains(mask) {
@@ -93,6 +94,8 @@ struct CrosswordPopulator{
             while finalWordList.isEmpty && !tempLetters.isEmpty && !Task.isCancelled {
                 let letter = tempLetters.removeFirst()
                 finalWordList = matchingWords.filterContaining(letter: letter)
+                let usedWordsSet = Set(usedWords)
+                finalWordList = finalWordList.filter { !usedWordsSet.contains($0) }
             }
 
             if finalWordList.isEmpty {
@@ -102,16 +105,15 @@ struct CrosswordPopulator{
 
             guard let word = finalWordList.randomElement() else {
                 crossword = currentCrossword
-
+                usedWords = currentUsedWords
                 failedMasks.append(mask)
-                
                 
                 return false
             }
             
+            usedWords.append(word)
+            
             upateLettersWithFoundWords()
-            
-            
 
             crossword.setWord(entry: entry, word: word)
 
@@ -132,6 +134,8 @@ struct CrosswordPopulator{
                 entry.attemptCount += 1
                 if entry.attemptCount >= 3 {
                     crossword = currentCrossword
+                    usedWords = currentUsedWords
+
                     return false
                 }
             }

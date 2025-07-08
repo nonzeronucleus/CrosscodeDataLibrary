@@ -30,6 +30,10 @@ class WordListContainer : WordListContainerProtocol {
         wordsByLength[word.count]?.append(word)
     }
     
+    func containsWord(_ word: String) -> Bool {
+        return words.contains(word)
+    }
+    
     static func groupWordsByLength(words: [String]) -> [Int:[String]] {
         var wordsByLength: [Int:[String]] = [:]
         
