@@ -1,19 +1,58 @@
 import Foundation
 import Factory
 
+
+//class Entry2: InstanceEquatable, CustomStringConvertible, Hashable {
+//    let id: UUID = UUID()
+//    private(set) var startPos:  Pos
+//
+//    
+//    init() {
+//        startPos = Pos(row: 0, column: 0)
+//    }
+//    
+//    var description: String { "" }
+//    
+//    // Hashable conformance
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(id)  
+//        hasher.combine(startPos)
+//    }
+//    
+//    // Equatable conformance (via InstanceEquatable)
+//    static func == (lhs: Entry2, rhs: Entry2) -> Bool {
+//        return lhs === rhs  // Instance equality
+//    }
+//}
+
+
+//    private(set) var startPos:  Pos
+//    private(set) var length: Int
+//    private(set) var direction: Direction
+//    private(set) var linkedEntries: [Entry] = []
+//    var depth = 0
+//    var attemptCount = 0
+    
+//    var word:String?
+//        self.length = 0
+
+
 public protocol Grid2DItem: Hashable, Codable, Sendable {
     func toStorable() -> Character
     mutating func reset()
 }
 
 public struct  Grid2D<Element: Codable & Identifiable & Grid2DItem>: Hashable, Sendable {
+//    var acrossEntries : [Entry] = []
+    
     public static func == (lhs: Grid2D<Element>, rhs: Grid2D<Element>) -> Bool {
         lhs.id == rhs.id &&
             zip(lhs.elements, rhs.elements).allSatisfy({ zip($0, $1).allSatisfy({ $0 == $1 }) })
     }
     
     private(set) var id: UUID
-    private(set) var elements: [[Element]]
+    /*private(set) */
+    var elements: [[Element]]
 
     public var rows: Int {
         get {
@@ -164,11 +203,4 @@ extension Grid2D {
 }
 
 
-extension Crossword {
-    public mutating func mutateElements(_ transform: (inout [[Cell]]) -> Void) {
-        var elements = self.elements // Assuming you have elements access
-        transform(&elements)
-        self.elements = elements
-    }
-}
 

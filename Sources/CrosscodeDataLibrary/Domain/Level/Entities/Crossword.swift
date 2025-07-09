@@ -1,21 +1,23 @@
-public typealias Crossword = Grid2D<Cell>
+//public typealias Crossword = Grid2D<Cell>
 
-public extension Crossword {
-//    func encode(to encoder: any Encoder) throws {
-//        
-//    }
-//    
+public struct Crossword: Equatable, Hashable, Sendable {
+    var grid:Grid2D<Cell>
+    public var rows: Int { grid.rows }
+    public var columns: Int { grid.columns }
+    public var elements: [[Cell]] { grid.elements }
+    
+
     init(rows: Int, columns: Int) {
-        self.init(rows: rows, columns: columns, elementGenerator: { row, col in Cell(pos: Pos(row: row, column: col)) })
+        grid = .init(rows: rows, columns: columns, elementGenerator: { row, col in Cell(pos: Pos(row: row, column: col)) })
     }
     
-    init(initString:String) {
+    public init(initString:String) {
         let initArray = initString.components(separatedBy: "|").filter { !$0.isEmpty }
         
         let rows = initArray.count
         let columns = initArray[0].count
         
-        self.init(rows: rows, columns: columns) {
+        grid = .init(rows: rows, columns: columns) {
             row, col in
                 return Cell(pos: Pos(row: row, column: col), configChar: initArray[row][col])
         }
@@ -26,13 +28,13 @@ public extension Crossword {
             for colIndex in elements[rowIndex].indices {
                 var elem = elements[rowIndex][colIndex]
                 elem.reset()
-                self[rowIndex,colIndex] = elem
+                grid[rowIndex,colIndex] = elem
             }
         }
     }
     
     var isPopulated: Bool {
-        for element in self.listElements() {
+        for element in grid.listElements() {
             if element.letter == " " {
                 return false
             }
@@ -45,7 +47,7 @@ public extension Crossword {
         
         for row in 0..<rows {
             for column in 0..<columns {
-                result += String(self[row, column].letter ?? ".")
+                result += String(grid[row, column].letter ?? ".")
             }
             result += "|"
         }
@@ -54,7 +56,7 @@ public extension Crossword {
     }
     
     mutating func depopulate() {
-        updateAll { cell in
+        grid.updateAll { cell in
             if cell.letter != nil {
                 var newCell = cell
                 newCell.letter = " "
@@ -76,7 +78,7 @@ public extension Crossword {
             for inner in innerRange {
                 let row = direction == .across ? outer : inner
                 let col = direction == .across ? inner : outer
-                let cell = self[row, col]
+                let cell = grid[row, col]
                 
                 if currentEntry == nil {
                     if cell.isActive {
@@ -113,7 +115,7 @@ public extension Crossword {
 
         for i in 0...entry.length-1 {
             let pos = Pos(row:entry.startPos.row + iter.0 * i, column: entry.startPos.column + iter.1 * i)
-            let cell = self[pos.row, pos.column]
+            let cell = grid[pos.row, pos.column]
 
             if let char = cell.letter {
                 word.append(char)
@@ -139,13 +141,13 @@ public extension Crossword {
         for i in 0...entry.length-1 {
             let index = word.index(word.startIndex, offsetBy: i)
             let char = word[index]
-            self[entry.startPos.row + iter.0 * i, entry.startPos.column + iter.1 * i].letter = char
+            grid[entry.startPos.row + iter.0 * i, entry.startPos.column + iter.1 * i].letter = char
         }
     }
     
     func getUsedLetters() -> [Character]{
         var letters:Set<Character> = []
-        for cell in listElements() {
+        for cell in grid.listElements() {
             if let letter = cell.letter {
                 letters.insert(letter)
 //                removeLetter(letter: cell.letter!)
@@ -155,6 +157,45 @@ public extension Crossword {
         return letters.sorted(by: <)
     }
 }
+
+
+// Grid wrappers
+extension Crossword {
+    public subscript(row: Int, column: Int) -> Cell {
+        grid[row, column]
+    }
+    
+    func listElements() -> [Cell] {
+        grid.listElements()
+    }
+    
+    public func locationOfElement(byID id: Cell.ID) -> Pos? {
+        grid.locationOfElement(byID: id)
+    }
+    
+    public mutating func mutateElements(_ transform: (inout [[Cell]]) -> Void) {
+        var elements = grid.elements // Assuming you have elements access
+        transform(&elements)
+        grid.elements = elements
+    }
+    
+    public mutating func updateElement(byID id: Cell.ID, with transform: (inout Cell) -> Void) -> Bool {
+        grid.updateElement(byID: id, with: transform)
+    }
+    
+    public mutating func updateElement(byPos location: Pos, with transform: (inout Cell) -> Void) {
+        grid.updateElement(byPos: location, with: transform)
+    }
+    
+    public func findElement(byID id: Cell.ID) -> Cell? {
+        grid.findElement(byID: id)
+    }
+    
+    public func getRows() -> [[Cell]] {
+        grid.getRows()
+    }
+}
+
 
 
 
