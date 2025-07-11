@@ -5,13 +5,17 @@ public struct Crossword: Equatable, Hashable, Sendable {
     public var rows: Int { grid.rows }
     public var columns: Int { grid.columns }
     public var elements: [[Cell]] { grid.elements }
+    var entries: [Direction:[Entry]] = [:]
     
 
-    init(rows: Int, columns: Int) {
+    public init(rows: Int, columns: Int) {
+        debugPrint("init(rows: Int, columns: Int)")
+
         grid = .init(rows: rows, columns: columns, elementGenerator: { row, col in Cell(pos: Pos(row: row, column: col)) })
     }
     
     public init(initString:String) {
+        debugPrint("init(initString:String)")
         let initArray = initString.components(separatedBy: "|").filter { !$0.isEmpty }
         
         let rows = initArray.count
@@ -68,38 +72,50 @@ public struct Crossword: Equatable, Hashable, Sendable {
     }
     
     internal func findEntries(direction: Direction) -> [Entry] {
+        debugPrint("FindEntries")
         var entries: [Entry] = []
-        var currentEntry: Entry?
+//        var currentEntry: Entry?
         
         let outerRange = direction == .across ? 0..<rows : 0..<columns
         let innerRange = direction == .across ? 0..<columns : 0..<rows
         
         for outer in outerRange {
+            var startPos: Pos?
+            var length = 0
             for inner in innerRange {
                 let row = direction == .across ? outer : inner
                 let col = direction == .across ? inner : outer
                 let cell = grid[row, col]
                 
-                if currentEntry == nil {
+                if startPos == nil {
                     if cell.isActive {
-                        currentEntry = Entry(startPos: Pos(row: row, column: col), direction: direction)
+                        startPos = Pos(row: row, column: col)
+//                        currentEntry = Entry(startPos: Pos(row: row, column: col), direction: direction)
                     }
                 } else {
                     if cell.isActive {
-                        currentEntry?.increaseLength()
+                        length += 1
                     } else {
-                        if currentEntry!.length > 1 {
-                            entries.append(currentEntry!)
+                        if let startPos {
+                            if length > 1 {
+                                entries.append(Entry(startPos: startPos, length: length+1, direction: direction ))
+                            }
                         }
-                        currentEntry = nil
+                        
+                        startPos = nil
+                        length = 0
                     }
                 }
             }
             
-            if let entry = currentEntry, entry.length > 1 {
-                entries.append(entry)
+            if let startPos {
+                if length > 1 {
+                    entries.append(Entry(startPos: startPos, length: length+1, direction: direction ))
+                }
             }
-            currentEntry = nil
+            
+            startPos = nil
+            length = 0
         }
         
         return entries
@@ -136,7 +152,7 @@ public struct Crossword: Equatable, Hashable, Sendable {
         let iter = entry.direction == .across ? (0,1) : (1,0)
 
 //        wordlist.removeWord(word: word)
-        entry.word = word
+//        entry.word = word
 
         for i in 0...entry.length-1 {
             let index = word.index(word.startIndex, offsetBy: i)
@@ -162,7 +178,11 @@ public struct Crossword: Equatable, Hashable, Sendable {
 // Grid wrappers
 extension Crossword {
     public subscript(row: Int, column: Int) -> Cell {
-        grid[row, column]
+        get {
+            grid[row, column]
+        } set {
+            grid[row, column] = newValue
+        }
     }
     
     func listElements() -> [Cell] {

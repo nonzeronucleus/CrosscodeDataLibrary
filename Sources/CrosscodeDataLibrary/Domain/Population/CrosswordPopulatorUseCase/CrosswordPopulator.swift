@@ -60,7 +60,7 @@ struct CrosswordPopulator{
     
     private mutating func populateEntry(_ entry: Entry) async throws -> Bool {
         var allPopulated = false
-        entry.attemptCount = 0
+        var attemptCount = 0
 
         while !allPopulated {
             totalAttempts += 1
@@ -131,8 +131,8 @@ struct CrosswordPopulator{
             }
             else {
                 crossword = currentCrossword
-                entry.attemptCount += 1
-                if entry.attemptCount >= 3 {
+                attemptCount += 1
+                if attemptCount >= 3 {
                     crossword = currentCrossword
                     usedWords = currentUsedWords
 

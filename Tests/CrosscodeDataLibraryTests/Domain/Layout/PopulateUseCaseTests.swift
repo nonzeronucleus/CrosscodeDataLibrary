@@ -9,9 +9,8 @@ class CrosscodeDataLibraryTests {
         let currentTask: PopulationTask? = nil
         let crosswordLayout: String =  "   ..       ...|..     .. . ...|   . . .. .    |. .. . ........|.       .......|.. .... .......|.   ... ...   .|. .   . .   . .|.   ... ...   .|....... .... ..|.......       .|........ . .. .|    . .. . .   |... . ..     ..|...       ..   |"
         
-//        let crossword = Crossword(initString:)
+        var wrong = 0
         
-//        for _ in 0..<100 {
         for _ in 0..<100 {
             let populateUseCase = CrosswordPopulatorUseCase()
             
@@ -32,9 +31,12 @@ class CrosscodeDataLibraryTests {
             #expect(hasAllUniqueElements(words) == true)
             
             if !hasAllUniqueElements(words) {
-                debugPrint(words.sorted(by: >))
+                wrong += 1
+//                debugPrint(words.sorted(by: >))
             }
         }
+        
+        debugPrint("Wrong \(wrong) times")
     }
     
     func areWordsGenuine(crossword: Crossword, entries: [Entry]) {

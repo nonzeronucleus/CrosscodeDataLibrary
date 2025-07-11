@@ -9,12 +9,15 @@ class EntryTreeGenerator {
     
     
     func generateRoot() -> Entry {
-        for e in acrossEntries {
-            e.reset()
-        }
-        for e in downEntries {
-            e.reset()
-        }
+        acrossEntries = acrossEntries.map { entry in Entry(startPos: entry.startPos, length: entry.length, direction: entry.direction) }
+        downEntries = downEntries.map { entry in Entry(startPos: entry.startPos, length: entry.length, direction: entry.direction) }
+
+//        for e in acrossEntries {
+//            e.reset()
+//        }
+//        for e in downEntries {
+//            e.reset()
+//        }
 
         let rootEntry = self.downEntries.randomElement()
         guard let rootEntry else {
@@ -23,11 +26,11 @@ class EntryTreeGenerator {
         
         downEntries.remove(rootEntry)
         
-        return generateEntry(entry: rootEntry, depth: 0)
+        return generateEntry(entry: rootEntry)
     }
     
-    private func generateEntry( entry: Entry, depth:Int) -> Entry {
-        entry.depth = depth
+    private func generateEntry( entry: Entry) -> Entry {
+        var childEntries:[Entry] = []
         
         if entry.direction == .across {
             acrossEntries.remove(entry)
@@ -35,8 +38,9 @@ class EntryTreeGenerator {
                 if !downEntries.contains(e) { continue } // Check to see if entry has been removed by nested node since this loop started
                 if entry.overlaps(other: e) {
                     downEntries.remove(e)
-                    let newEntry = generateEntry(entry: e, depth: depth+1)
-                    entry.linkEntry(to: newEntry)
+                    let newEntry = generateEntry(entry: e)
+                    childEntries.append(newEntry)
+//                    entry.linkEntry(to: newEntry)
                 }
             }
         }
@@ -49,11 +53,13 @@ class EntryTreeGenerator {
 
                 if entry.overlaps(other: e) {
                     acrossEntries.remove(e)
-                    let newEntry = generateEntry(entry: e, depth: depth+1)
-                    entry.linkEntry(to: newEntry)
+                    let newEntry = generateEntry(entry: e)
+                    childEntries.append(newEntry)
+
+//                    entry.linkEntry(to: newEntry)
                 }
             }
         }
-        return entry
+        return Entry(startPos: entry.startPos, length: entry.length, direction: entry.direction, linkedEntries: childEntries)
     }
 }
