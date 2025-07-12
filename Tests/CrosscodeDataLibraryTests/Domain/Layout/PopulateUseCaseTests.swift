@@ -17,9 +17,9 @@ class CrosscodeDataLibraryTests {
             
             let (output, _) = try await populateUseCase.execute(task: currentTask, crosswordLayout: crosswordLayout)
             
-            let crossword: Crossword = Crossword(initString: output)
-            let acrossClues: [Entry] = crossword.findEntries(direction: .across)
-            let downClues: [Entry] = crossword.findEntries(direction: .down)
+            var crossword: Crossword = Crossword(initString: output)
+            let acrossClues: [Entry] = crossword.acrossEntries
+            let downClues: [Entry] = crossword.downEntries
             
             let allClues: [Entry] = acrossClues + downClues
             

@@ -5,17 +5,15 @@ public struct Crossword: Equatable, Hashable, Sendable {
     public var rows: Int { grid.rows }
     public var columns: Int { grid.columns }
     public var elements: [[Cell]] { grid.elements }
-    var entries: [Direction:[Entry]] = [:]
     
-
+    lazy var acrossEntries: [Entry] = self.findEntries(direction: .across)
+    lazy var downEntries: [Entry] = self.findEntries(direction: .down)
+    
     public init(rows: Int, columns: Int) {
-        debugPrint("init(rows: Int, columns: Int)")
-
         grid = .init(rows: rows, columns: columns, elementGenerator: { row, col in Cell(pos: Pos(row: row, column: col)) })
     }
     
     public init(initString:String) {
-        debugPrint("init(initString:String)")
         let initArray = initString.components(separatedBy: "|").filter { !$0.isEmpty }
         
         let rows = initArray.count
@@ -71,10 +69,42 @@ public struct Crossword: Equatable, Hashable, Sendable {
         }
     }
     
-    internal func findEntries(direction: Direction) -> [Entry] {
-        debugPrint("FindEntries")
+    mutating func getWords() -> [String]{
+        var words:[String] = []
+        
+        let allEntries = acrossEntries + downEntries
+        
+        for entry in allEntries {
+            let word = getWord(entry: entry)
+            
+            if isFullWord(string: word) {
+                words.append(word)
+            }
+        }
+                
+        return words
+    }
+    
+    mutating func getWords(length: Int) -> [String]{
+        var words:[String] = []
+        
+        let allEntries = acrossEntries + downEntries
+        
+        for entry in allEntries {
+            if entry.length != length { continue }
+            let word = getWord(entry: entry)
+            
+            if isFullWord(string: word) {
+                words.append(word)
+            }
+        }
+                
+        return words
+    }
+
+    
+    private func findEntries(direction: Direction) -> [Entry] {
         var entries: [Entry] = []
-//        var currentEntry: Entry?
         
         let outerRange = direction == .across ? 0..<rows : 0..<columns
         let innerRange = direction == .across ? 0..<columns : 0..<rows
@@ -119,6 +149,10 @@ public struct Crossword: Equatable, Hashable, Sendable {
         }
         
         return entries
+    }
+    
+    func isFullWord(string:String) -> Bool {
+        return string.allSatisfy { $0 != " " && $0 != "." }
     }
     
     internal func getWord(entry:Entry) -> String {

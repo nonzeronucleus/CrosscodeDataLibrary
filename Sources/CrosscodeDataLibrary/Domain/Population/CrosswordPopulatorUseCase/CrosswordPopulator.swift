@@ -13,8 +13,8 @@ struct CrosswordPopulator{
     init(crossword: Crossword) {
         self.crossword = crossword
         self.initCrossword = crossword
-        self.acrossEntries = crossword.findEntries(direction: .across)
-        self.downEntries = crossword.findEntries(direction: .down)
+        self.acrossEntries = self.crossword.acrossEntries
+        self.downEntries = self.crossword.downEntries
     }
 
     mutating func populateCrossword(currentTask: PopulationTask?) async throws -> (crossword: Crossword, characterIntMap: CharacterIntMap) {
@@ -78,13 +78,20 @@ struct CrosswordPopulator{
                 return false
             }
 
-            var wordsByLength = wordlist.getWordsByLength(length: mask.count)
+            let wordsByLength = wordlist.getWordsByLength(length: mask.count)
             var matchingWords = wordsByLength.filterByMask(mask: mask)
-
+            
+            let wordsInCrossword = crossword.getWords(length: mask.count)
+            
+            for existingWord in wordsInCrossword {
+                matchingWords.remove(existingWord)
+            }
+            
             if matchingWords.isEmpty {
-                wordlist.reset(forLength: mask.count)
-                wordsByLength = wordlist.getWordsByLength(length: mask.count)
-                matchingWords = wordsByLength.filterByMask(mask: mask)
+                return false
+//                wordlist.reset(forLength: mask.count)
+//                wordsByLength = wordlist.getWordsByLength(length: mask.count)
+//                matchingWords = wordsByLength.filterByMask(mask: mask)
             }
             
             
