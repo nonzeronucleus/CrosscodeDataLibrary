@@ -250,7 +250,17 @@ extension Crossword {
     }
 }
 
-
+extension Crossword {
+    static func generateGridString(rows: Int, columns: Int) -> String {
+        // Create a single row string (e.g., ".........|" for columns=9)
+        let singleRow = String(repeating: ".", count: columns) + "|"
+        
+        // Repeat the row string for the specified number of rows
+        let gridString = String(repeating: singleRow, count: rows)
+        
+        return gridString
+    }
+}
 
 
 

@@ -65,7 +65,7 @@ struct CrosswordPopulator{
         while !allPopulated {
             totalAttempts += 1
             
-            if totalAttempts > 1000 {
+            if totalAttempts > 10000 {
                 throw PopulationError.tooManyTotalAttempts(attempts: totalAttempts)
             }
 
@@ -89,9 +89,6 @@ struct CrosswordPopulator{
             
             if matchingWords.isEmpty {
                 return false
-//                wordlist.reset(forLength: mask.count)
-//                wordsByLength = wordlist.getWordsByLength(length: mask.count)
-//                matchingWords = wordsByLength.filterByMask(mask: mask)
             }
             
             
@@ -139,7 +136,7 @@ struct CrosswordPopulator{
             else {
                 crossword = currentCrossword
                 attemptCount += 1
-                if attemptCount >= 3 {
+                if attemptCount >= 5 {
                     crossword = currentCrossword
                     usedWords = currentUsedWords
 
