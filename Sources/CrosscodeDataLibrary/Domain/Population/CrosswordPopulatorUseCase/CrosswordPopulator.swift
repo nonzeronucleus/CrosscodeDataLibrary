@@ -9,18 +9,24 @@ struct CrosswordPopulator{
     var totalAttempts:Int = 0
     let initCrossword:Crossword
     var usedWords: [String] = []
+    var currentTask: PopulationTask
 
-    init(crossword: Crossword) {
+    init(crossword: Crossword, currentTask: PopulationTask) {
         self.crossword = crossword
         self.initCrossword = crossword
         self.acrossEntries = self.crossword.acrossEntries
         self.downEntries = self.crossword.downEntries
+        self.currentTask = currentTask
+
+//        debugPrint("Across entries: \(acrossEntries)")
+//        debugPrint("Down entries: \(downEntries)")
     }
 
-    mutating func populateCrossword(currentTask: PopulationTask?) async throws -> (crossword: Crossword, characterIntMap: CharacterIntMap) {
+    mutating func populateCrossword() async throws -> (crossword: Crossword, characterIntMap: CharacterIntMap) {
         var populated = false
         var attempts = 0
-        let maxAttempts = 10
+        let maxAttempts = 100
+        
         totalAttempts = 0
         
         resetLettersToFind()
@@ -47,7 +53,7 @@ struct CrosswordPopulator{
             catch PopulationError.tooManyTotalAttempts {
                 populated = false
             }
-            
+            debugPrint(attempts)
             attempts += 1
         }
         
@@ -65,8 +71,12 @@ struct CrosswordPopulator{
         while !allPopulated {
             totalAttempts += 1
             
-            if totalAttempts > 10000 {
+            if totalAttempts > 2000 {
                 throw PopulationError.tooManyTotalAttempts(attempts: totalAttempts)
+            }
+            
+            if currentTask.isCancelled {
+                throw PopulationError.cancelled
             }
 
 
@@ -170,14 +180,17 @@ struct CrosswordPopulator{
 
 public enum PopulationError: Error, CustomStringConvertible, LocalizedError {
     case tooManyTotalAttempts(attempts: Int)  // Fixed typo in parameter name
+    case cancelled
     case failedToPopulate(reason: String)
     
     public var description: String {
         switch self {
-        case .tooManyTotalAttempts(let attempts):
-            return "Population failed after \(attempts) attempts"
-        case .failedToPopulate(let reason):
-            return "Population failed: \(reason)"
+            case .tooManyTotalAttempts(let attempts):
+                return "Population failed after \(attempts) attempts"
+            case .failedToPopulate(let reason):
+                return "Population failed: \(reason)"
+            case .cancelled:
+                return "Canceled population"
         }
     }
     
@@ -188,8 +201,10 @@ public enum PopulationError: Error, CustomStringConvertible, LocalizedError {
     
     public var failureReason: String? {
         switch self {
-        case .tooManyTotalAttempts: return "Maximum attempt limit reached"
-        case .failedToPopulate: return "Population algorithm failed"
+            case .tooManyTotalAttempts: return "Maximum attempt limit reached"
+            case .failedToPopulate: return "Population algorithm failed"
+            case .cancelled: return description
+                
         }
     }
     

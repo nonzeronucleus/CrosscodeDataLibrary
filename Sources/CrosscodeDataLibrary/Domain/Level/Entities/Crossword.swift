@@ -120,6 +120,7 @@ public struct Crossword: Equatable, Hashable, Sendable {
                 if startPos == nil {
                     if cell.isActive {
                         startPos = Pos(row: row, column: col)
+                        
 //                        currentEntry = Entry(startPos: Pos(row: row, column: col), direction: direction)
                     }
                 } else {
@@ -127,7 +128,7 @@ public struct Crossword: Equatable, Hashable, Sendable {
                         length += 1
                     } else {
                         if let startPos {
-                            if length > 1 {
+                            if length > 0 {
                                 entries.append(Entry(startPos: startPos, length: length+1, direction: direction ))
                             }
                         }
@@ -139,7 +140,7 @@ public struct Crossword: Equatable, Hashable, Sendable {
             }
             
             if let startPos {
-                if length > 1 {
+                if length > 0 {
                     entries.append(Entry(startPos: startPos, length: length+1, direction: direction ))
                 }
             }

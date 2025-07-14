@@ -7,10 +7,9 @@ public protocol LayoutsAPI: LevelsAPI {
     func importLayouts() async throws -> [Layout]
 
     func populateCrossword(crosswordLayout: String) async throws -> (String, String)
-    
+    func cancelPopulation()  async
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String)
 
-//    func addNewLayout() async throws {
     func addNewLayout(crosswordLayout: String?) async throws
     func exportLayouts() async throws
 }
@@ -23,6 +22,7 @@ extension LayoutsAPI {
 
 
 public class LayoutsAPIImpl : LayoutsAPI {
+    
     public func addNewLayout(crosswordLayout: String? = nil) async throws {
         try await addNewLevel(crosswordLayout: crosswordLayout)
     }
@@ -85,6 +85,11 @@ extension LayoutsAPIImpl {
         try await actor.populate(crosswordLayout: crosswordLayout)
     }
     
+    
+    public func cancelPopulation() async {
+        await actor.cancel()
+    }
+
     public func depopulateCrossword(crosswordLayout: String) async throws -> (String, String) {
         let depopulateCrosswordUseCase: DepopulateCrosswordUseCase = Container.shared.depopulateCrosswordUseCase()
         
