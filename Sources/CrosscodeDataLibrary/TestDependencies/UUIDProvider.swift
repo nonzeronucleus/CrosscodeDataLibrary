@@ -28,13 +28,47 @@ public struct RandomUUIDProvider: UUIDGen {
     }
 }
 
-public final class IncrementingUUIDProvider: UUIDGen {
-    private var counter = 0
+//public final class IncrementingUUIDProvider: UUIDGen, Sendable {
+//    private var counter = 0
+//    private let lock = NSLock()
+//    
+//    public init() {
+//        
+//    }
+//    
+//    public func reset() {
+//        counter = 0
+//    }
+//    
+//    public func uuidGenerator() -> UUID {
+//        lock.lock()
+//        defer { lock.unlock() }
+//        counter += 1
+//        let uuidString = String(format: "00000000-0000-0000-0000-%012d", counter)
+//        return UUID(uuidString: uuidString)!
+//    }
+//}
+
+public final class IncrementingUUIDProvider: UUIDGen, @unchecked Sendable {
+    private var counter: Int
     private let lock = NSLock()
     
     public init() {
-        
+        counter = 0
     }
+    
+    public func reset(_ val: Int = 0) {
+        lock.lock()
+        defer { lock.unlock() }
+        counter = val
+    }
+    
+    public func increase(_ val: Int = 0) {
+        lock.lock()
+        defer { lock.unlock() }
+        counter += val
+    }
+    
     
     public func uuidGenerator() -> UUID {
         lock.lock()
@@ -44,30 +78,3 @@ public final class IncrementingUUIDProvider: UUIDGen {
         return UUID(uuidString: uuidString)!
     }
 }
-
-//
-//protocol UUIDGenerator {
-//    func uuidGenerator() -> UUID
-//}
-//
-//
-//struct RandomUUIDProvider: UUIDGenerator {
-//    func uuidGenerator() -> UUID {
-//        UUID()
-//    }
-//}
-//
-//final class IncrementingUUIDProvider: UUIDGenerator {
-//    private var counter = 0
-//    private let lock = NSLock()
-//    
-//    func uuidGenerator() -> UUID {
-//        lock.lock()
-//        defer { lock.unlock() }
-//        counter += 1
-//        let uuidString = String(format: "00000000-0000-0000-0000-%012d", counter)
-//        return UUID(uuidString: uuidString)!
-//    }
-//}
-//
-

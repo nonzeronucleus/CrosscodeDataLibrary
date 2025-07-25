@@ -5,7 +5,7 @@ extension Container {
     
     public var uuid: Factory<UUIDGen> {
         self { RandomUUIDProvider() }
-            .singleton
+//            .singleton
     }
     
     
