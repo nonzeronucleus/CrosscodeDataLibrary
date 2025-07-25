@@ -71,7 +71,7 @@ struct CrosswordPopulator{
         while !allPopulated {
             totalAttempts += 1
             
-            if totalAttempts > 2000 {
+            if totalAttempts > 600 {
                 throw PopulationError.tooManyTotalAttempts(attempts: totalAttempts)
             }
             
