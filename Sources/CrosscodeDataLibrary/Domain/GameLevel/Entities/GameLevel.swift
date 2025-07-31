@@ -9,7 +9,7 @@ public struct GameLevel: Level, Identifiable, Equatable, Hashable, Sendable {
         set { layout.crossword = newValue}
     }
     
-    public var letterMap: CharacterIntMap? {
+    public var letterMap: [Character] {
         get { layout.letterMap }
         set { layout.letterMap = newValue }
     }
@@ -71,13 +71,13 @@ public struct GameLevel: Level, Identifiable, Equatable, Hashable, Sendable {
         String(attemptedLetters)
     }
     
-    var numCorrectLetters: Int {
-        layout.letterMap?.countCorrectlyPlacedLetters(in: String(attemptedLetters)) ?? -1
-    }
-
-    func getNextLetterToReveal() -> Character? {
-        layout.letterMap?.first(where: { !usedLetters.contains($0.key) })?.key
-    }
+//    var numCorrectLetters: Int {
+//        layout.oldLetterMapx?.countCorrectlyPlacedLetters(in: String(attemptedLetters)) ?? -1
+//    }
+//
+//    func getNextLetterToReveal() -> Character? {
+//        layout.oldLetterMapx?.first(where: { !usedLetters.contains($0.key) })?.key
+//    }
 
     var usedLetters: Set<Character> {
         Set(attemptedLetters.filter { $0 != " " })
@@ -124,6 +124,43 @@ public struct GameLevel: Level, Identifiable, Equatable, Hashable, Sendable {
 
         return words
     }
+}
+
+extension GameLevel {
+    private func getUnusedLetters() -> [Character?] {
+        guard letterMap.count == 26 && attemptedLetters.count == 26 else {
+            fatalError("Arrays must be 26 characters long")
+        }
+        
+        // 1. Get all non-nil attempted letters
+        let usedLetters = Set(attemptedLetters.compactMap { $0 })
+        
+        // 2. Create masked array preserving positions
+        return letterMap.enumerated().map { index, letter in
+            // Keep letter if:
+            // - Position in attemptedLetters is nil (not attempted)
+            // - Letter isn't used elsewhere
+            attemptedLetters[index] == " " && !usedLetters.contains(letter)
+            ? letter
+            : nil
+        }
+    }
+    
+    public func getNextLetter() throws -> (Character, Int)?  {
+        let unusedLetters = getUnusedLetters()
+        
+        
+        let availableLetters = unusedLetters.enumerated()
+            .compactMap { (index, char) -> (Character, Int)? in
+                guard let char = char else { return nil }
+                return (char, index)
+            }
+        
+        // 2. Return random element if exists
+        return availableLetters.randomElement()
+
+    }
+
 }
 
 extension GameLevel: Codable {

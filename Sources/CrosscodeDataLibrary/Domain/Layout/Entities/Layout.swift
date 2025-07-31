@@ -7,13 +7,14 @@ public struct Layout: Level, Identifiable, Equatable, Hashable, Sendable, Codabl
     public var id: UUID
     public var number: Int?
     public var crossword: Crossword
-    public var letterMap: CharacterIntMap?
+    public var letterMap: [Character] = []
 
+
+    // Only for tests
     public init(id: UUID, number: Int?, crossword: Crossword, letterMap: CharacterIntMap?) {
         self.id = id
         self.number = number
         self.crossword = crossword
-        self.letterMap = letterMap
     }
     
     public init(id: UUID, number: Int?, gridText: String?, letterMap: String? = nil) {
@@ -24,9 +25,20 @@ public struct Layout: Level, Identifiable, Equatable, Hashable, Sendable, Codabl
         } else {
             crossword = Crossword(rows: 15, columns: 15)
         }
-        let parsedLetterMap = letterMap.map { CharacterIntMap(from: $0) }
-
-        self.letterMap = parsedLetterMap
+        
+        if let letterMap {
+            debugPrint(letterMap)
+            initLetterMap(letterMap: letterMap)
+        }
+    }
+    
+    public mutating func initLetterMap(letterMap: String) {
+        do {
+            self.letterMap = try buildStringFromJSONMapping(letterMap)
+        }
+        catch(let e) {
+            debugPrint(e.localizedDescription)
+        }
     }
 
 
@@ -49,8 +61,41 @@ public struct Layout: Level, Identifiable, Equatable, Hashable, Sendable, Codabl
     }
 
     public var letterMapStr: String? {
-        letterMap?.toJSON()
+        String(letterMap)
     }
+}
+
+
+func buildStringFromJSONMapping(_ jsonString: String) throws -> [Character] {
+    if jsonString.count == 26 {
+        return Array(jsonString)
+    }
+    
+
+    // 1. Parse JSON into dictionary
+    guard let data = jsonString.data(using: .utf8),
+          let dict = try JSONSerialization.jsonObject(with: data) as? [String: Int]
+    else {
+        throw NSError(domain: "Invalid JSON", code: 0)
+    }
+    
+    // 2. Find maximum position value
+    guard let maxPos = dict.values.max() else {
+        return [] // Empty if no characters
+    }
+    
+    // 3. Create array with placeholders
+    var characters = [Character](repeating: " ", count: maxPos + 1)
+    
+    // 4. Place each character at its position
+    for (charStr, position) in dict {
+        guard let char = charStr.first, position >= 0 else { continue }
+        if position < characters.count {
+            characters[position] = char
+        }
+    }
+    
+    return characters
 }
 
 extension Layout {
@@ -66,13 +111,6 @@ extension Layout {
         // Decode crossword from the string representation
         let crosswordString = try container.decode(String.self, forKey: .crossword)
         crossword = Crossword(initString: crosswordString)
-        
-        // Decode letterMap if present
-        if let letterMapString = try container.decodeIfPresent(String.self, forKey: .letterMap) {
-            letterMap = CharacterIntMap(from: letterMapString)
-        } else {
-            letterMap = nil
-        }
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -80,7 +118,8 @@ extension Layout {
         try container.encode(id, forKey: .id)
         try container.encode(number, forKey: .number)
         try container.encode(crossword.layoutString(), forKey: .crossword)
-        try container.encodeIfPresent(letterMap?.toJSON(), forKey: .letterMap)
+        fatalError("\(#function) not implemented")
+//        try container.encodeIfPresent(oldLetterMapx?.toJSON(), forKey: .letterMap)
     }
 
     
