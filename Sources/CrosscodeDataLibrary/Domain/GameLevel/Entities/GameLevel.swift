@@ -71,6 +71,13 @@ public struct GameLevel: Level, Identifiable, Equatable, Hashable, Sendable {
         String(attemptedLetters)
     }
     
+    public var numCorrectLetters: Int {
+        return zip(letterMap, attemptedLetters).reduce(0) { count, pair in
+            return pair.0 == pair.1 ? count + 1 : count
+        }
+    }
+
+    
 //    var numCorrectLetters: Int {
 //        layout.oldLetterMapx?.countCorrectlyPlacedLetters(in: String(attemptedLetters)) ?? -1
 //    }
@@ -185,7 +192,6 @@ extension GameLevel: Codable {
         isLocked = try container.decode(Bool.self, forKey: .isLocked)
     }
     
-//    public static var api: LevelsAPI { get {
     public static func getApi() -> APIType {
         return .gameLevelsAPI
     }

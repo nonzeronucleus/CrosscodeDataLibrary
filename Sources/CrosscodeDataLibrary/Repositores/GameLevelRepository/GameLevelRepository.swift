@@ -35,9 +35,9 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
         request.propertiesToFetch = [expressionDesc]
         request.resultType = .dictionaryResultType
         
-        if let result = try context.fetch(request).first {
-            debugPrint(result)
-        }
+//        if let result = try context.fetch(request).first {
+//            debugPrint(result)
+//        }
 
         
         guard let result = try context.fetch(request).first,

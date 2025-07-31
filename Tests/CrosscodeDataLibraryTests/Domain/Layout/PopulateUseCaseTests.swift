@@ -32,7 +32,6 @@ class CrosscodeDataLibraryTests {
             
             if !hasAllUniqueElements(words) {
                 wrong += 1
-//                debugPrint(words.sorted(by: >))
             }
         }
         

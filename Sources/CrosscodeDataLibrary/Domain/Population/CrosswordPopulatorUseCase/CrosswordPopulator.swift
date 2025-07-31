@@ -17,12 +17,9 @@ struct CrosswordPopulator{
         self.acrossEntries = self.crossword.acrossEntries
         self.downEntries = self.crossword.downEntries
         self.currentTask = currentTask
-
-//        debugPrint("Across entries: \(acrossEntries)")
-//        debugPrint("Down entries: \(downEntries)")
     }
 
-    mutating func populateCrossword() async throws -> (crossword: Crossword, characterIntMap: CharacterIntMap) {
+    mutating func populateCrossword() async throws -> (crossword: Crossword, letterMap: [Character]){    ///*, characterIntMap: CharacterIntMap*/) {
         var populated = false
         var attempts = 0
         let maxAttempts = 100
@@ -61,7 +58,15 @@ struct CrosswordPopulator{
             throw PopulationError.failedToPopulate(reason: "Had \(attempts) attempts")
         }
         
-        return (crossword: crossword, characterIntMap: CharacterIntMap(shuffle: true))
+        guard
+            let start = "A".unicodeScalars.first?.value,
+            let end = "Z".unicodeScalars.first?.value
+        else {
+            fatalError("Couldn't get Unicode scalar values for A or Z")
+        }
+        let alphabet = (start...end).map { Character(UnicodeScalar($0)!) }.shuffled()
+        
+        return (crossword: crossword, letterMap: alphabet/*characterIntMap: CharacterIntMap(shuffle: true)*/)
     }
     
     private mutating func populateEntry(_ entry: Entry) async throws -> Bool {

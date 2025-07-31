@@ -11,10 +11,11 @@ public struct Layout: Level, Identifiable, Equatable, Hashable, Sendable, Codabl
 
 
     // Only for tests
-    public init(id: UUID, number: Int?, crossword: Crossword, letterMap: CharacterIntMap?) {
+    public init(id: UUID, number: Int?, crossword: Crossword, letterMap: String) {
         self.id = id
         self.number = number
         self.crossword = crossword
+        self.letterMap = Array(letterMap)
     }
     
     public init(id: UUID, number: Int?, gridText: String?, letterMap: String? = nil) {
@@ -27,12 +28,12 @@ public struct Layout: Level, Identifiable, Equatable, Hashable, Sendable, Codabl
         }
         
         if let letterMap {
-            debugPrint(letterMap)
             initLetterMap(letterMap: letterMap)
         }
     }
     
     public mutating func initLetterMap(letterMap: String) {
+        if letterMap == "" { return }
         do {
             self.letterMap = try buildStringFromJSONMapping(letterMap)
         }
@@ -68,7 +69,7 @@ public struct Layout: Level, Identifiable, Equatable, Hashable, Sendable, Codabl
 
 func buildStringFromJSONMapping(_ jsonString: String) throws -> [Character] {
     if jsonString.count == 26 {
-        return Array(jsonString)
+        return Array(jsonString.uppercased(with: .autoupdatingCurrent))
     }
     
 
@@ -119,11 +120,9 @@ extension Layout {
         try container.encode(number, forKey: .number)
         try container.encode(crossword.layoutString(), forKey: .crossword)
         fatalError("\(#function) not implemented")
-//        try container.encodeIfPresent(oldLetterMapx?.toJSON(), forKey: .letterMap)
     }
 
     
-//    static var api: LevelsAPI { get {
     public static func getApi() -> APIType {
         return .layoutsAPI
     }

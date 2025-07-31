@@ -23,6 +23,7 @@ public class CoreDataStack {
                 self.printLocation(description: description)
             }
         }
+//        printLocation(description: persistentContainer.persistentStoreDescriptions.first!)
     }
 
     public var viewContext: NSManagedObjectContext {
