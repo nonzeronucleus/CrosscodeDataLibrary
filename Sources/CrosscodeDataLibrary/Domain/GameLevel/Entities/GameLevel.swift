@@ -77,16 +77,7 @@ public struct GameLevel: Level, Identifiable, Equatable, Hashable, Sendable {
         }
     }
 
-    
-//    var numCorrectLetters: Int {
-//        layout.oldLetterMapx?.countCorrectlyPlacedLetters(in: String(attemptedLetters)) ?? -1
-//    }
-//
-//    func getNextLetterToReveal() -> Character? {
-//        layout.oldLetterMapx?.first(where: { !usedLetters.contains($0.key) })?.key
-//    }
-
-    var usedLetters: Set<Character> {
+    public var usedLetters: Set<Character> {
         Set(attemptedLetters.filter { $0 != " " })
     }
 

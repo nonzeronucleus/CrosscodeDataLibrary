@@ -50,7 +50,6 @@ struct CrosswordPopulator{
             catch PopulationError.tooManyTotalAttempts {
                 populated = false
             }
-            debugPrint(attempts)
             attempts += 1
         }
         
