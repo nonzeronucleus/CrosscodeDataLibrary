@@ -10,8 +10,6 @@ public protocol GameLevelsAPI : LevelsAPI {
     func exportGameLevels() async throws
     func importGameLevels() async throws -> [GameLevel]
     func fetchAllPacks() async throws -> [Pack]
-//    func addPack() async throws -> Pack
-    
 }
 
 public class GameLevelsAPIImpl:GameLevelsAPI{

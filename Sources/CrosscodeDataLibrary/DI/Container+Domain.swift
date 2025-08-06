@@ -64,7 +64,7 @@ public extension Container {
         }
     }
     
-    var saveLevelUseCase: Factory<SaveLevelUseCase> {
+    var saveLayoutUseCase: Factory<SaveLevelUseCase> {
         Factory(self) { @MainActor in
             SaveLayoutUseCaseImpl(
                 repository: self.layoutRepository(),
@@ -144,6 +144,17 @@ public extension Container {
             )
         }
     }
+    
+    
+    var saveGameLayoutstUseCase: Factory<SaveLevelUseCase> {
+        Factory(self) { @MainActor in
+            SaveLayoutUseCaseImpl(
+                repository: self.gameLevelRepository(),
+                debounceTime: 500_000_000 // 0.5s debounce
+            )
+        }
+    }
+
     
 //    internal var addPackUseCase: Factory<AddPackUseCase> {
 //        Factory(self) {

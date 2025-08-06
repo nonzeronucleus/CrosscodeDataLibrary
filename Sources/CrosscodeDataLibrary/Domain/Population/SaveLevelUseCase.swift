@@ -4,14 +4,12 @@ import Combine
 
 @MainActor  // Ensures CoreData operations run on the main thread
 final class SaveLayoutUseCaseImpl: SaveLevelUseCase {
-//    private let repository: LayoutRepository
     private let repository: LevelRepository
     private var saveTask: Task<Void, Error>?
     private let debounceTime: UInt64 // in nanoseconds (e.g., 500_000_000 = 0.5s)
 
     init(
-//        repository: LayoutRepository = Container.shared.layoutRepository(),
-        repository: LevelRepository = Container.shared.layoutRepository(),
+        repository: LevelRepository/* = Container.shared.layoutRepository()*/,
         debounceTime: UInt64 = 500_000_000 // Default: 0.5 seconds
     ) {
         self.repository = repository
