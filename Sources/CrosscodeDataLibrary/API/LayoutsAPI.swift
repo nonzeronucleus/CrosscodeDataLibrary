@@ -60,8 +60,8 @@ public class LayoutsAPIImpl : LayoutsAPI {
     }
     
     public func saveLevel(level: any Level) async throws {
-        let saveGameLayoutstUseCase: SaveLevelUseCase = Container.shared.saveLayoutUseCase()
-        try await saveGameLayoutstUseCase.execute(level: level)
+        let saveLayoutUseCase: SaveLevelUseCase = Container.shared.saveLayoutUseCase()
+        try await saveLayoutUseCase.execute(level: level)
     }
 
     public func cancel() async {

@@ -54,7 +54,8 @@ public class GameLevelsAPIImpl:GameLevelsAPI{
     }
     
     public func saveLevel(level: any Level) async throws {
-        fatalError("\(#function) not implemented")
+        let saveLGametUseCase: SaveLevelUseCase = Container.shared.saveGameLayoutstUseCase()
+        try await saveLGametUseCase.execute(level: level)
     }
     
     public func cancel() async {

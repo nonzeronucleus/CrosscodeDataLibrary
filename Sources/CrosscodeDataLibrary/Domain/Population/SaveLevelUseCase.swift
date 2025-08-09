@@ -17,10 +17,6 @@ final class SaveLayoutUseCaseImpl: SaveLevelUseCase {
     }
 
     func execute(level: any Level) async throws {
-        guard let layout = level as? Layout else {
-            fatalError("Invalid level type provided")
-        }
-        
         // Cancel the previous task if it exists
         saveTask?.cancel()
 
@@ -33,7 +29,7 @@ final class SaveLayoutUseCaseImpl: SaveLevelUseCase {
             try Task.checkCancellation()
 
             // Proceed with save (runs on MainActor)
-            try self?.repository.save(level: layout)
+            try self?.repository.save(level: level)
         }
 
         // Await the task's result (propagates errors if needed)
@@ -44,18 +40,3 @@ final class SaveLayoutUseCaseImpl: SaveLevelUseCase {
 public protocol SaveLevelUseCase {
     func execute(level:any Level) async throws
 }
-
-
-//class SaveLevelUseCaseImpl: SaveLevelUseCase {
-//    private let repository: LevelRepository
-//
-//    // Dependency injected via Factory
-//    public init(repository: LevelRepository = Container.shared.levelRepository()) {
-//        self.repository = repository
-//    }
-//
-//    func execute(level:Level) async throws  {
-//        try repository.saveLevel(level: level)
-//    }
-//}
-
