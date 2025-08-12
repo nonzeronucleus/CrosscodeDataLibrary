@@ -7,7 +7,9 @@ class WordListContainer : WordListContainerProtocol {
     var count:Int { words.count }
     
     init() {
-        let name = "ukenglish"
+//        let name = "ukenglish"
+        let name = "dictshort"
+//        let name = "dictlong"
         self.words = WordListContainer.loadFile(name)
         self.wordsByLength = WordListContainer.groupWordsByLength(words: words)
         self.origWordsByLength = wordsByLength
