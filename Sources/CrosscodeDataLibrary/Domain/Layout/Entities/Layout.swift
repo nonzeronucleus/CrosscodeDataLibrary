@@ -119,7 +119,7 @@ extension Layout {
         try container.encode(id, forKey: .id)
         try container.encode(number, forKey: .number)
         try container.encode(crossword.layoutString(), forKey: .crossword)
-        fatalError("\(#function) not implemented")
+//        fatalError("\(#function) not implemented")
     }
 
     

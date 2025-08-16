@@ -35,11 +35,6 @@ extension CoreDataGameLevelRepositoryImpl: GameLevelRepository {
         request.propertiesToFetch = [expressionDesc]
         request.resultType = .dictionaryResultType
         
-//        if let result = try context.fetch(request).first {
-//            debugPrint(result)
-//        }
-
-        
         guard let result = try context.fetch(request).first,
               let maxNumber = result["maxLevelNumber"] as? Int64 else {
             return 0

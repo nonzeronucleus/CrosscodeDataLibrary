@@ -10,7 +10,6 @@ struct ExportGameLevelsUseCaseImpl: ExportGameLevelsUseCase {
     let fileRepository: FileRepository
     
     func execute() async throws {
-//        debugPrint("Exporting to \(repository.url)")
         let levels = try await levelRepository.fetchAll() as! [GameLevel]
 
         let jsonData = try JSONEncoder().encode(levels)
